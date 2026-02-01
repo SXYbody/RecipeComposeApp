@@ -1,22 +1,57 @@
 package com.yourcompany.recipecomposeapp
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.yourcompany.recipecomposeapp.ui.navigation.BottomNavigation
 import com.yourcompany.recipecomposeapp.ui.theme.RecipeComposeAppTheme
 
 @Preview
 @Composable
-fun RecipesApp(){
+fun RecipesApp() {
     RecipeComposeAppTheme() {
+        var screen by remember { mutableStateOf(ScreenId.CATEGORY) }
+
         Scaffold(
             content = { paddingValues ->
-                Text(
-                    text = "Recipes App",
-                    modifier = Modifier.padding(paddingValues),
+                when(screen) {
+                    ScreenId.CATEGORY -> {
+                        Box(
+                            modifier = Modifier
+                                .padding(paddingValues)
+                                .fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) { Text("Category") }
+                    }
+                    ScreenId.FAVORITE -> {
+                        Box(
+                            modifier = Modifier
+                                .padding(paddingValues)
+                                .fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) { Text("Favorite") }
+                    }
+                }
+            },
+            bottomBar = {
+                BottomNavigation(
+                    onFavoriteClick = {
+                        screen = ScreenId.CATEGORY
+                    },
+                    onCategoriesClick = {
+                        screen = ScreenId.FAVORITE
+                    },
                 )
             }
         )
