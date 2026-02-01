@@ -19,7 +19,16 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            RecipesApp()
+            RecipeComposeAppTheme() {
+                Scaffold(
+                    content = { paddingValues ->
+                        Text(
+                            text = "Recipes App",
+                            modifier = Modifier.padding(paddingValues),
+                        )
+                    }
+                )
+            }
         }
     }
 }
