@@ -2,7 +2,6 @@ package com.yourcompany.recipecomposeapp
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -21,12 +20,12 @@ import com.yourcompany.recipecomposeapp.ui.theme.RecipeComposeAppTheme
 @Composable
 fun RecipesApp() {
     RecipeComposeAppTheme() {
-        var screen by remember { mutableStateOf(ScreenId.CATEGORY) }
+        var screen by remember { mutableStateOf(ScreenId.CATEGORIES) }
 
         Scaffold(
             content = { paddingValues ->
-                when(screen) {
-                    ScreenId.CATEGORY -> {
+                when (screen) {
+                    ScreenId.CATEGORIES -> {
                         Box(
                             modifier = Modifier
                                 .padding(paddingValues)
@@ -34,7 +33,8 @@ fun RecipesApp() {
                             contentAlignment = Alignment.Center
                         ) { Text("Category") }
                     }
-                    ScreenId.FAVORITE -> {
+
+                    ScreenId.FAVORITES -> {
                         Box(
                             modifier = Modifier
                                 .padding(paddingValues)
@@ -46,11 +46,11 @@ fun RecipesApp() {
             },
             bottomBar = {
                 BottomNavigation(
-                    onFavoriteClick = {
-                        screen = ScreenId.CATEGORY
-                    },
                     onCategoriesClick = {
-                        screen = ScreenId.FAVORITE
+                        screen = ScreenId.CATEGORIES
+                    },
+                    onFavoriteClick = {
+                        screen = ScreenId.FAVORITES
                     },
                 )
             }
