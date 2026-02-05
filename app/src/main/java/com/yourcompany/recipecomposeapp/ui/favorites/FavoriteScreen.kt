@@ -1,4 +1,4 @@
-package com.yourcompany.recipecomposeapp.ui.categories
+package com.yourcompany.recipecomposeapp.ui.favorites
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,7 +10,7 @@ import com.yourcompany.recipecomposeapp.ui.components.ScreenHeader
 import com.yourcompany.recipecomposeapp.ui.recipes.RecipesScreen
 
 @Composable
-fun CategoriesScreen(
+fun FavoriteScreen(
     modifier: Modifier = Modifier,
 ){
     Column(
@@ -18,9 +18,9 @@ fun CategoriesScreen(
         modifier = modifier
     ) {
         ScreenHeader(
-            painter = painterResource(R.drawable.bcg_categories),
+            painter = painterResource(R.drawable.bcg_favorites),
             painterContent = "Заголовок категорий",
-            text = "КАТЕГОРИИ",
+            text = "ИЗБРАННОЕ",
         )
 
         RecipesScreen()
