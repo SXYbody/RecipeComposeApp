@@ -1,4 +1,4 @@
-package com.yourcompany.recipecomposeapp.ui.categories.components
+package com.yourcompany.recipecomposeapp.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -9,7 +9,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -45,7 +44,7 @@ fun ScreenHeader(
 @Composable
 fun ScreenHeaderPreview() {
     ScreenHeader(
-        painter = painterResource(R.drawable.bcg_categories),
+        painter = painterResource(R.drawable.bcg_favorites),
         painterContent = "Бургер",
         text = "КАТЕГОРИИ",
     )
