@@ -6,7 +6,7 @@ import com.yourcompany.recipecomposeapp.data.model.IngredientDto
 import com.yourcompany.recipecomposeapp.data.model.RecipeDto
 
 @Immutable
-class RecipeUiModel(
+data class RecipeUiModel(
     val id: Int,
     val title: String,
     val ingredients: List<IngredientDto>,

@@ -5,7 +5,7 @@ import com.yourcompany.recipecomposeapp.Constants
 import com.yourcompany.recipecomposeapp.data.model.CategoryDto
 
 @Immutable
-class CategoryUiModel(
+data class CategoryUiModel(
     val id: Int,
     val title: String,
     val description: String,
