@@ -6,4 +6,5 @@ data class RecipeDto(
     val ingredients: List<IngredientDto>,
     val method: String,
     val imageUrl: String,
+    val isFavorite: Boolean,
 )
