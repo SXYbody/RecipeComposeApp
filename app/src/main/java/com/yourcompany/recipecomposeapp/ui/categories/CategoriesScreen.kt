@@ -1,4 +1,5 @@
 package com.yourcompany.recipecomposeapp.ui.categories
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,13 +11,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.yourcompany.recipecomposeapp.R
 import com.yourcompany.recipecomposeapp.data.repository.RecipesRepositoryStub
+import com.yourcompany.recipecomposeapp.ui.categories.model.toUiModel
 import com.yourcompany.recipecomposeapp.ui.components.ScreenHeader
 import com.yourcompany.recipecomposeapp.ui.recipes.RecipesScreen
 
 @Composable
 fun CategoriesScreen(
     modifier: Modifier = Modifier,
-){
+) {
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = modifier
@@ -31,8 +33,10 @@ fun CategoriesScreen(
             columns = GridCells.Fixed(2),
             modifier = modifier.fillMaxSize(),
 
-        ) {
-            items(RecipesRepositoryStub.getCategories()) { category ->
+            ) {
+            items(
+                items = RecipesRepositoryStub.getCategories().map { it.toUiModel() },
+                key = { it.id }) { category ->
                 CategoryItem(
                     onClick = {},
                     image = category.imageUrl,
