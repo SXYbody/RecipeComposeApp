@@ -13,11 +13,11 @@ import com.yourcompany.recipecomposeapp.R
 import com.yourcompany.recipecomposeapp.data.repository.RecipesRepositoryStub
 import com.yourcompany.recipecomposeapp.ui.categories.model.toUiModel
 import com.yourcompany.recipecomposeapp.ui.components.ScreenHeader
-import com.yourcompany.recipecomposeapp.ui.recipes.RecipesScreen
 
 @Composable
 fun CategoriesScreen(
     modifier: Modifier = Modifier,
+    onClickCategory: (Int) -> Unit,
 ) {
     Column(
         verticalArrangement = Arrangement.Top,
@@ -38,7 +38,9 @@ fun CategoriesScreen(
                 items = RecipesRepositoryStub.getCategories().map { it.toUiModel() },
                 key = { it.id }) { category ->
                 CategoryItem(
-                    onClick = {},
+                    onClick = {
+                        onClickCategory(category.id)
+                    },
                     image = category.imageUrl,
                     imageContentDescription = "Картинка категории",
                     title = category.title,
@@ -46,7 +48,5 @@ fun CategoriesScreen(
                 )
             }
         }
-
-        RecipesScreen()
     }
 }
