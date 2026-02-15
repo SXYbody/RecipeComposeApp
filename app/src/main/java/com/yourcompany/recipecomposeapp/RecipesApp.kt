@@ -66,9 +66,7 @@ fun RecipesApp() {
                         ) {
                             RecipesScreen(
                                 categoryId = selectedCategoryId ?: error("Category ID is required"),
-                                onRecipeClick = { id ->
-
-                                },
+                                onRecipeClick = {},
                                 titleRecipeScreen = selectedCategoryTitle
                                     ?: error("Category title is required")
                             )

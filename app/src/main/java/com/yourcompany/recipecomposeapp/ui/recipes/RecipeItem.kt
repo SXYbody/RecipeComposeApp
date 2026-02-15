@@ -15,10 +15,10 @@ import com.yourcompany.recipecomposeapp.ui.recipes.model.RecipeUiModel
 @Composable
 fun RecipeItem(
     recipe: RecipeUiModel,
-    onRecipeClick: () -> Unit,
+    onRecipeClick: (Int) -> Unit,
 ) {
     Card(
-        onClick = onRecipeClick
+        onClick = { onRecipeClick(recipe.id) }
     ) {
         Column {
             AsyncImage(

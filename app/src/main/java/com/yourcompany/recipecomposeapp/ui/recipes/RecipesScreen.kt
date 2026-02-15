@@ -39,7 +39,7 @@ fun RecipesScreen(
     )
 
     LazyColumn() {
-        items(recipes) { recipe ->
+        items(recipes, key = { it.id }) { recipe ->
             RecipeItem(
                 recipe = recipe,
                 onRecipeClick = {
