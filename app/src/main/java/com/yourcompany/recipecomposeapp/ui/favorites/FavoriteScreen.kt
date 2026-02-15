@@ -23,6 +23,5 @@ fun FavoriteScreen(
             text = "ИЗБРАННОЕ",
         )
 
-        RecipesScreen()
     }
 }
