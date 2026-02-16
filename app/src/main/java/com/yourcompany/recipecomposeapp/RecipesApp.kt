@@ -94,10 +94,10 @@ fun RecipesApp() {
             bottomBar = {
                 BottomNavigation(
                     onCategoriesClick = {
-                        navController.navigate("categories")
+                        navController.navigate(Destination.Categories.route)
                     },
                     onFavoriteClick = {
-                        navController.navigate("favorites")
+                        navController.navigate(Destination.Favorites.route)
                     },
                 )
             }
