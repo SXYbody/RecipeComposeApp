@@ -14,7 +14,6 @@ data class RecipeUiModel(
     val imageUrl: String,
     val isFavorite: Boolean,
 )
-
 fun RecipeDto.toUiModel() = RecipeUiModel(
     id = id,
     title = title,

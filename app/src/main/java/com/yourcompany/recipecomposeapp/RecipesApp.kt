@@ -24,7 +24,6 @@ import com.yourcompany.recipecomposeapp.ui.navigation.BottomNavigation
 import com.yourcompany.recipecomposeapp.ui.navigation.Destination
 import com.yourcompany.recipecomposeapp.ui.recipes.RecipesScreen
 import com.yourcompany.recipecomposeapp.ui.theme.RecipeComposeAppTheme
-
 @Preview
 @Composable
 fun RecipesApp() {
