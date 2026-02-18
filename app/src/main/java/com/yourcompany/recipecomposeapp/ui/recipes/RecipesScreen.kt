@@ -20,7 +20,7 @@ import com.yourcompany.recipecomposeapp.ui.recipes.model.toUiModel
 fun RecipesScreen(
     categoryId: Int,
     modifier: Modifier = Modifier,
-    onRecipeClick: (Int) -> Unit,
+    onRecipeClick: (Int, RecipeUiModel) -> Unit,
     titleRecipeScreen: String,
 ) {
     var recipes by remember { mutableStateOf<List<RecipeUiModel>>(emptyList()) }
@@ -43,7 +43,7 @@ fun RecipesScreen(
             RecipeItem(
                 recipe = recipe,
                 onRecipeClick = {
-                    onRecipeClick(recipe.id)
+                    onRecipeClick(recipe.id, recipe)
                 }
             )
         }

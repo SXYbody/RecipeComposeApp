@@ -19,10 +19,12 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.yourcompany.recipecomposeapp.data.repository.RecipesRepositoryStub
 import com.yourcompany.recipecomposeapp.ui.categories.CategoriesScreen
+import com.yourcompany.recipecomposeapp.ui.details.RecipeDetailsScreen
 import com.yourcompany.recipecomposeapp.ui.favorites.FavoriteScreen
 import com.yourcompany.recipecomposeapp.ui.navigation.BottomNavigation
 import com.yourcompany.recipecomposeapp.ui.navigation.Destination
 import com.yourcompany.recipecomposeapp.ui.recipes.RecipesScreen
+import com.yourcompany.recipecomposeapp.ui.recipes.model.RecipeUiModel
 import com.yourcompany.recipecomposeapp.ui.theme.RecipeComposeAppTheme
 
 @Preview
@@ -83,11 +85,34 @@ fun RecipesApp() {
                         ) {
                             RecipesScreen(
                                 categoryId = categoryId,
-                                onRecipeClick = {},
+                                onRecipeClick = { recipeId, recipeUiModel ->
+                                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                                        "recipe",
+                                        recipeUiModel
+                                    )
+                                    navController.navigate(
+                                        Destination.Ingredients.createRoute(
+                                            recipeId
+                                        )
+                                    )
+                                },
                                 titleRecipeScreen = selectedCategoryTitle
                                     ?: error("Category title is required")
                             )
                         }
+                    }
+
+                    composable(
+                        route = Destination.Ingredients.route,
+                        arguments = listOf(navArgument("recipeId") { type = NavType.IntType })
+                    ) {
+                        val recipe =
+                            navController.previousBackStackEntry?.savedStateHandle?.get<RecipeUiModel>(
+                                Constants.KEY_RECIPE_OBJECT
+                            )
+                        RecipeDetailsScreen(
+                            recipe = recipe
+                        )
                     }
                 }
             },
