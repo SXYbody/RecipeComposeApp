@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="portions_count">
+        <item quantity="one">%d порция</item>
+        <item quantity="few">%d порции</item>
+        <item quantity="many">%d порций</item>
+    </plurals>
+</resources>
