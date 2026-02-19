@@ -5,6 +5,9 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
+import com.yourcompany.recipecomposeapp.R
 import com.yourcompany.recipecomposeapp.data.model.IngredientDto
 import kotlin.math.roundToInt
 
@@ -13,6 +16,7 @@ fun IngredientItem(
     title: String,
     quantity: Double,
     unitOfMeasure: String,
+    modifier: Modifier
 ) {
     val measureText = when {
         quantity >= 0.75 -> "3/4"
@@ -20,10 +24,17 @@ fun IngredientItem(
         quantity >= 0.25 -> "1/4"
         else -> "щепотка"
     }
+
+    val portionsText = pluralStringResource(
+        R.plurals.portions_count,
+        quantity.toInt(),
+        quantity.toInt()
+    )
+
     Card {
-        Row {
+        Row(modifier = modifier) {
             Text(title)
-            Text("$measureText")
+            Text("$measureText $portionsText $unitOfMeasure")
         }
     }
 
@@ -50,7 +61,8 @@ fun IngredientsList(
         IngredientItem(
             title = ingredient.description,
             quantity = ingredient.quantity,
-            unitOfMeasure = ingredient.unitOfMeasure
+            unitOfMeasure = ingredient.unitOfMeasure,
+            modifier = Modifier
         )
     }
 }

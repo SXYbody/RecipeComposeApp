@@ -53,7 +53,7 @@ fun RecipeDetailsScreen(
                 currentPortions = newValue
             }
         )
-        IngredientsList(recipe.ingredients)
+        IngredientsList(scaledIngredients)
 
         Text(text = recipe.method)
     }
