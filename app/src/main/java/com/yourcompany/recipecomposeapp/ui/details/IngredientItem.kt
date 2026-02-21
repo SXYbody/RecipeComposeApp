@@ -16,25 +16,20 @@ fun IngredientItem(
     title: String,
     quantity: Double,
     unitOfMeasure: String,
-    modifier: Modifier
+    modifier: Modifier = Modifier
 ) {
     val measureText = when {
+        quantity >= 1 -> quantity
         quantity >= 0.75 -> "3/4"
         quantity >= 0.5 -> "1/2"
         quantity >= 0.25 -> "1/4"
         else -> "щепотка"
     }
 
-    val portionsText = pluralStringResource(
-        R.plurals.portions_count,
-        quantity.toInt(),
-        quantity.toInt()
-    )
-
     Card {
         Row(modifier = modifier) {
             Text(title)
-            Text("$measureText $portionsText $unitOfMeasure")
+            Text(" $measureText $unitOfMeasure")
         }
     }
 
@@ -62,7 +57,6 @@ fun IngredientsList(
             title = ingredient.description,
             quantity = ingredient.quantity,
             unitOfMeasure = ingredient.unitOfMeasure,
-            modifier = Modifier
         )
     }
 }
