@@ -11,11 +11,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.yourcompany.recipecomposeapp.R
 import com.yourcompany.recipecomposeapp.ui.components.ScreenHeader
 import com.yourcompany.recipecomposeapp.ui.recipes.model.RecipeUiModel
+import com.yourcompany.recipecomposeapp.ui.utils.shareRecipe
 
 @Composable
 fun RecipeDetailsScreen(
@@ -35,6 +37,7 @@ fun RecipeDetailsScreen(
             )
         }
     }
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -44,7 +47,9 @@ fun RecipeDetailsScreen(
         ScreenHeader(
             painter = painterResource(R.drawable.ic_launcher_foreground),
             painterContent = "Заголовок",
-            text = recipe.title
+            text = recipe.title,
+            showShareButton = true,
+            onShareClick = { shareRecipe(context, recipe.id, recipe.title)}
         )
 
         PortionsSlider(

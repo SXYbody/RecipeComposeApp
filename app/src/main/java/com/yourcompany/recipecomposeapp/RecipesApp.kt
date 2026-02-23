@@ -157,7 +157,7 @@ fun AppNavHost(
 
             if (recipeId != null) {
                 delay(100)
-                navController.navigate(Destination.Recipes.createRoute(recipeId))
+                navController.navigate(Destination.Ingredients.createRoute(recipeId))
             }
         }
     }

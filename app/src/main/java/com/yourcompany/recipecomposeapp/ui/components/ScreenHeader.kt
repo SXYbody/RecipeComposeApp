@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +22,8 @@ fun ScreenHeader(
     painter: Painter,
     painterContent: String,
     text: String,
+    showShareButton: Boolean = false,
+    onShareClick: () -> Unit = {}
 ) {
     Box(
         modifier = Modifier
@@ -36,6 +39,11 @@ fun ScreenHeader(
             shape = RoundedCornerShape(10.dp)
         ) {
             Text(text = text)
+            if (showShareButton) {
+                Button(
+                    onClick = onShareClick,
+                ) { Text("Поделиться") }
+            }
         }
     }
 }
