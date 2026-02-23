@@ -7,12 +7,14 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.yourcompany.recipecomposeapp.R
 import com.yourcompany.recipecomposeapp.ui.components.ScreenHeader
@@ -28,7 +30,7 @@ fun RecipeDetailsScreen(
         return
     }
 
-    var currentPortions by remember { mutableStateOf(recipe.servings) }
+    var currentPortions by remember { mutableIntStateOf(recipe.servings) }
     val scaledIngredients = remember(currentPortions) {
         val multiplier = currentPortions.toDouble() / recipe.servings
         recipe.ingredients.map { ingredient ->
@@ -58,6 +60,8 @@ fun RecipeDetailsScreen(
                 currentPortions = newValue
             }
         )
+        Text(portionsText)
+
         IngredientsList(scaledIngredients)
 
         Text(text = recipe.method)
