@@ -119,7 +119,8 @@ fun RecipesApp(
                                 Constants.KEY_RECIPE_OBJECT
                             )
                         RecipeDetailsScreen(
-                            recipe = recipe
+                            recipe = recipe,
+                            onFavoriteToggle = { isFavorite -> !isFavorite }
                         )
                     }
                 }

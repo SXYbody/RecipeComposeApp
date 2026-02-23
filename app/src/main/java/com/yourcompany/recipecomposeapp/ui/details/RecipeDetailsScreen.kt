@@ -10,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -23,15 +24,17 @@ import com.yourcompany.recipecomposeapp.ui.utils.shareRecipe
 
 @Composable
 fun RecipeDetailsScreen(
-    recipe: RecipeUiModel? = null
+    recipe: RecipeUiModel? = null,
+    isFavorite: Boolean = false,
+    onFavoriteToggle: (Boolean) -> Unit = {},
 ) {
     if (recipe == null) {
         Text("рецепт не найден!")
         return
     }
 
-    var currentPortions by remember { mutableIntStateOf(recipe.servings) }
-    val scaledIngredients = remember(currentPortions) {
+    var currentPortions by rememberSaveable { mutableIntStateOf(recipe.servings) }
+    val scaledIngredients = remember(currentPortions, recipe.ingredients) {
         val multiplier = currentPortions.toDouble() / recipe.servings
         recipe.ingredients.map { ingredient ->
             ingredient.copy(
@@ -56,7 +59,10 @@ fun RecipeDetailsScreen(
             painterContent = "Заголовок",
             text = recipe.title,
             showShareButton = true,
-            onShareClick = { shareRecipe(context, recipe.id, recipe.title)}
+            onShareClick = { shareRecipe(context, recipe.id, recipe.title) },
+            showFavoriteButton = true,
+            isFavorite = isFavorite,
+            onFavoriteClick = { onFavoriteToggle },
         )
 
         PortionsSlider(
