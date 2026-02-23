@@ -39,6 +39,11 @@ fun RecipeDetailsScreen(
             )
         }
     }
+    val portionsText = pluralStringResource(
+        R.plurals.portions_count,
+        currentPortions,
+        currentPortions
+    )
     val context = LocalContext.current
 
     Column(
