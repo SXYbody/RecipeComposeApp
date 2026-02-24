@@ -62,7 +62,7 @@ fun RecipeDetailsScreen(
             onShareClick = { shareRecipe(context, recipe.id, recipe.title) },
             showFavoriteButton = true,
             isFavorite = isFavorite,
-            onFavoriteClick = { onFavoriteToggle },
+            onFavoriteClick = { onFavoriteToggle(isFavorite) },
         )
 
         PortionsSlider(

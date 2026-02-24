@@ -10,6 +10,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,6 +40,7 @@ fun RecipesApp(
     RecipeComposeAppTheme() {
         var selectedCategoryTitle by remember { mutableStateOf<String?>(null) }
         val navController = rememberNavController()
+        var isFavorite by rememberSaveable { mutableStateOf(false) }
 
         AppNavHost(navController = navController, deepLinkIntent = intent)
 
@@ -120,7 +122,8 @@ fun RecipesApp(
                             )
                         RecipeDetailsScreen(
                             recipe = recipe,
-                            onFavoriteToggle = { isFavorite -> !isFavorite }
+                            isFavorite = isFavorite,
+                            onFavoriteToggle = { isFavorite = !it }
                         )
                     }
                 }

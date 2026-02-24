@@ -1,6 +1,6 @@
 package com.yourcompany.recipecomposeapp.ui.components
 
-import android.graphics.drawable.Icon
+
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -13,9 +13,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
@@ -26,7 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberImagePainter
+
 import com.yourcompany.recipecomposeapp.R
 
 @Composable
@@ -71,8 +68,8 @@ fun ScreenHeader(
                     ) { isCurrentFavorite ->
                         val heartIcon = rememberVectorPainter(
                             image = ImageVector.vectorResource(
-                                id = if (isCurrentFavorite) R.drawable.favorite_on
-                                else R.drawable.favorite_off
+                                id = if (isCurrentFavorite) R.drawable.ic_android_black_24dp
+                                else R.drawable.ic_android_black_25dp
                             )
                         )
                         Icon(
