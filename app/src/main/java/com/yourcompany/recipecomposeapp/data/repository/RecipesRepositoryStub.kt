@@ -20,6 +20,30 @@ object RecipesRepositoryStub {
             "Самые вкусные рецепты десертов специально для вас",
             "dessert.png"
         ),
+        CategoryDto(
+            2,
+            "Пицца",
+            "Пицца на любой вкус и цвет. Лучшая подборка для тебя",
+            "pizza.png"
+        ),
+        CategoryDto(
+            3,
+            "Рыба",
+            "Печеная, жареная, сушеная, любая рыба на твой вкус",
+            "fish.png"
+        ),
+        CategoryDto(
+            4,
+            "Супы",
+            "От классики до экзотики: мир в одной тарелке",
+            "soup.png"
+        ),
+        CategoryDto(
+            5,
+            "Салаты",
+            "Хрустящий калейдоскоп под соусом вдохновения",
+            "salad.png"
+        ),
     )
 
     private val burgerRecipes: List<RecipeDto> = listOf(

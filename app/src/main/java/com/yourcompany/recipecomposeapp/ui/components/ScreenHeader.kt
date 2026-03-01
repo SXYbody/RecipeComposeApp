@@ -3,11 +3,16 @@ package com.yourcompany.recipecomposeapp.ui.components
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -16,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -52,7 +58,9 @@ fun ScreenHeader(
         )
 
         Row(
-            modifier = Modifier.align(Alignment.TopEnd)
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(12.dp)
         ) {
             if (showShareButton) {
                 Button(
@@ -61,24 +69,30 @@ fun ScreenHeader(
             }
 
             if (showFavoriteButton) {
-                Button(
-                    onClick = onFavoriteClick
+                Box(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(Color.Black.copy(alpha = 0.3f))
+                        .clickable(onClick = onFavoriteClick),
+                    contentAlignment = Alignment.Center
                 ) {
                     Crossfade(
                         targetState = isFavorite,
                         animationSpec = tween(durationMillis = 300),
                         label = "favorite_animation"
                     ) { isCurrentFavorite ->
-                        val heartIcon = rememberVectorPainter(
+                        val heartPainter = rememberVectorPainter(
                             image = ImageVector.vectorResource(
-                                id = if (isCurrentFavorite) R.drawable.ic_android_black_24dp
-                                else R.drawable.ic_android_black_25dp
+                                id = if (isCurrentFavorite) R.drawable.ic_heart
+                                else R.drawable.ic_heart_empty
                             )
                         )
                         Icon(
-                            painter = heartIcon,
-                            contentDescription = "Favorite",
-                            tint = Color.Unspecified
+                            painter = heartPainter,
+                            contentDescription = "Избранное",
+                            tint = Color.Unspecified,
+                            modifier = Modifier.size(24.dp)
                         )
                     }
                 }
@@ -86,9 +100,16 @@ fun ScreenHeader(
         }
 
         Surface(
-            modifier = Modifier.align(Alignment.BottomStart),
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(16.dp),
             shape = RoundedCornerShape(10.dp)
-        ) { Text(text = text) }
+        ) {
+            Text(
+                text = text,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            )
+        }
     }
 }
 
