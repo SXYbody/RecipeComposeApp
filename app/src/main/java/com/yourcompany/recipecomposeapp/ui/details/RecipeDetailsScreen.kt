@@ -20,19 +20,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.yourcompany.recipecomposeapp.R
 import com.yourcompany.recipecomposeapp.ui.components.ScreenHeader
 import com.yourcompany.recipecomposeapp.ui.recipes.model.RecipeUiModel
+import com.yourcompany.recipecomposeapp.ui.utils.FavoritePrefsManager
 import com.yourcompany.recipecomposeapp.ui.utils.shareRecipe
 
 @Composable
 fun RecipeDetailsScreen(
-    recipe: RecipeUiModel? = null,
-    isFavorite: Boolean = false,
+    recipe: RecipeUiModel,
+    favoritePrefs: FavoritePrefsManager,
     onFavoriteToggle: (Boolean) -> Unit = {},
 ) {
-    if (recipe == null) {
-        Text("рецепт не найден!")
-        return
-    }
-
     var currentPortions by rememberSaveable { mutableIntStateOf(recipe.servings) }
     val scaledIngredients = remember(currentPortions, recipe.ingredients) {
         val multiplier = currentPortions.toDouble() / recipe.servings
@@ -42,6 +38,10 @@ fun RecipeDetailsScreen(
             )
         }
     }
+    var isFavorite by remember(recipe.id) {
+        mutableStateOf(favoritePrefs.isFavorite(recipe.id))
+    }
+
     val portionsText = pluralStringResource(
         R.plurals.portions_count,
         currentPortions,
@@ -82,5 +82,5 @@ fun RecipeDetailsScreen(
 @Preview
 @Composable
 fun RecipeDetailsScreenPreview() {
-    RecipeDetailsScreen()
+//    RecipeDetailsScreen()
 }

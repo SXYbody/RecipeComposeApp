@@ -10,10 +10,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -30,6 +30,7 @@ import com.yourcompany.recipecomposeapp.ui.navigation.Destination
 import com.yourcompany.recipecomposeapp.ui.recipes.RecipesScreen
 import com.yourcompany.recipecomposeapp.ui.recipes.model.RecipeUiModel
 import com.yourcompany.recipecomposeapp.ui.theme.RecipeComposeAppTheme
+import com.yourcompany.recipecomposeapp.ui.utils.FavoritePrefsManager
 import kotlinx.coroutines.delay
 
 @Preview
@@ -40,7 +41,7 @@ fun RecipesApp(
     RecipeComposeAppTheme() {
         var selectedCategoryTitle by remember { mutableStateOf<String?>(null) }
         val navController = rememberNavController()
-        var isFavorite by rememberSaveable { mutableStateOf(false) }
+        val favoritePref = FavoritePrefsManager(LocalContext.current)
 
         AppNavHost(navController = navController, deepLinkIntent = intent)
 
@@ -79,7 +80,21 @@ fun RecipesApp(
                                 .padding(paddingValues)
                                 .fillMaxSize(),
                             contentAlignment = Alignment.Center
-                        ) { FavoriteScreen() }
+                        ) {
+                            FavoriteScreen(
+                                onClickRecipe = { recipeId ->
+                                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                                        "recipe",
+                                        RecipesRepositoryStub.getRecipeById(recipeId)
+                                    )
+                                    navController.navigate(
+                                        Destination.Ingredients.createRoute(
+                                            recipeId
+                                        )
+                                    )
+                                },
+                            )
+                        }
                     }
 
                     composable(
@@ -120,10 +135,12 @@ fun RecipesApp(
                             navController.previousBackStackEntry?.savedStateHandle?.get<RecipeUiModel>(
                                 Constants.KEY_RECIPE_OBJECT
                             )
+                        if (recipe == null) return@composable
+
                         RecipeDetailsScreen(
                             recipe = recipe,
-                            isFavorite = isFavorite,
-                            onFavoriteToggle = { isFavorite = !it }
+                            favoritePrefs = favoritePref,
+                            onFavoriteToggle = { isFavorite -> !isFavorite }
                         )
                     }
                 }
