@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.yourcompany.recipecomposeapp.R
 import com.yourcompany.recipecomposeapp.ui.components.ScreenHeader
 import com.yourcompany.recipecomposeapp.ui.recipes.RecipeItem
+import com.yourcompany.recipecomposeapp.ui.recipes.model.RecipeUiModel
 import com.yourcompany.recipecomposeapp.ui.utils.FavoritePrefsManager
 
 @Composable
@@ -54,7 +55,7 @@ fun FavoriteScreen(
                 RecipeItem(
                     recipe = recipe,
                     onRecipeClick = {
-                        onClickRecipe(it)
+                        onClickRecipe(recipe.id)
                     }
                 )
             }

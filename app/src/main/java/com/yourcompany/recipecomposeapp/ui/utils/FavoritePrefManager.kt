@@ -26,7 +26,7 @@ class FavoritePrefsManager (
         val updatedFavorites = currentFavorites?.toMutableSet() ?: mutableSetOf()
         updatedFavorites.add(recipeId.toString())
 
-        sharedPreferences.edit().putStringSet("favorite_recipe_ids", updatedFavorites)
+        sharedPreferences.edit().putStringSet("favorite_recipe_ids", updatedFavorites).commit()
 
     }
 
@@ -36,7 +36,7 @@ class FavoritePrefsManager (
         val updatedFavorites = currentFavorites?.toMutableSet() ?: mutableSetOf()
         updatedFavorites.remove(recipeId.toString())
 
-        sharedPreferences.edit().putStringSet("favorite_recipe_ids", updatedFavorites)
+        sharedPreferences.edit().putStringSet("favorite_recipe_ids", updatedFavorites).commit()
     }
 
     fun getAllFavorites(): Set<String>? =

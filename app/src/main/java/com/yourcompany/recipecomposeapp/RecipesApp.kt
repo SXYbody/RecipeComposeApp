@@ -29,6 +29,7 @@ import com.yourcompany.recipecomposeapp.ui.navigation.BottomNavigation
 import com.yourcompany.recipecomposeapp.ui.navigation.Destination
 import com.yourcompany.recipecomposeapp.ui.recipes.RecipesScreen
 import com.yourcompany.recipecomposeapp.ui.recipes.model.RecipeUiModel
+import com.yourcompany.recipecomposeapp.ui.recipes.model.toUiModel
 import com.yourcompany.recipecomposeapp.ui.theme.RecipeComposeAppTheme
 import com.yourcompany.recipecomposeapp.ui.utils.FavoritePrefsManager
 import kotlinx.coroutines.delay
@@ -85,7 +86,7 @@ fun RecipesApp(
                                 onClickRecipe = { recipeId ->
                                     navController.currentBackStackEntry?.savedStateHandle?.set(
                                         "recipe",
-                                        RecipesRepositoryStub.getRecipeById(recipeId)
+                                        RecipesRepositoryStub.getRecipeById(recipeId)?.toUiModel()
                                     )
                                     navController.navigate(
                                         Destination.Ingredients.createRoute(
@@ -140,7 +141,6 @@ fun RecipesApp(
                         RecipeDetailsScreen(
                             recipe = recipe,
                             favoritePrefs = favoritePref,
-                            onFavoriteToggle = { isFavorite -> !isFavorite }
                         )
                     }
                 }
