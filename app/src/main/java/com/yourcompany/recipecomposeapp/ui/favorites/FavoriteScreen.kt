@@ -1,10 +1,11 @@
 package com.yourcompany.recipecomposeapp.ui.favorites
 
-import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -12,12 +13,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.yourcompany.recipecomposeapp.R
 import com.yourcompany.recipecomposeapp.ui.components.ScreenHeader
 import com.yourcompany.recipecomposeapp.ui.recipes.RecipeItem
-import com.yourcompany.recipecomposeapp.ui.recipes.model.RecipeUiModel
 import com.yourcompany.recipecomposeapp.ui.utils.FavoritePrefsManager
 
 @Composable
@@ -27,13 +25,10 @@ fun FavoriteScreen(
 ) {
     val favoritePref = FavoritePrefsManager(LocalContext.current)
 
-    Column(
-        verticalArrangement = Arrangement.Top,
-        modifier = modifier
-    ) {
+    Column {
         ScreenHeader(
-            painter = painterResource(R.drawable.bcg_favorites),
-            painterContent = "Заголовок категорий",
+            image = "file:///android_asset/favorites.png",
+            imageContentDescription = "Заголовок категорий",
             text = "ИЗБРАННОЕ",
         )
 
@@ -43,11 +38,10 @@ fun FavoriteScreen(
         }
 
         LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
+            columns = GridCells.Fixed(1),
             modifier = modifier.fillMaxSize(),
             contentPadding = PaddingValues(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(
                 items = favoritePref.getAllFavoritesToModels(),
@@ -56,7 +50,7 @@ fun FavoriteScreen(
                     recipe = recipe,
                     onRecipeClick = {
                         onClickRecipe(recipe.id)
-                    }
+                    },
                 )
             }
         }

@@ -80,7 +80,7 @@ fun RecipesApp(
                             modifier = Modifier
                                 .padding(paddingValues)
                                 .fillMaxSize(),
-                            contentAlignment = Alignment.Center
+                            contentAlignment = Alignment.TopStart
                         ) {
                             FavoriteScreen(
                                 onClickRecipe = { recipeId ->
@@ -107,7 +107,7 @@ fun RecipesApp(
                             modifier = Modifier
                                 .padding(paddingValues)
                                 .fillMaxSize(),
-                            contentAlignment = Alignment.Center
+                            contentAlignment = Alignment.TopStart
                         ) {
                             RecipesScreen(
                                 categoryId = categoryId,
@@ -141,6 +141,10 @@ fun RecipesApp(
                         RecipeDetailsScreen(
                             recipe = recipe,
                             favoritePrefs = favoritePref,
+                            onFavoriteToggle = { isFavorite ->
+                                if (isFavorite) favoritePref.addToFavorite(recipe.id)
+                                else favoritePref.removeToFavorite(recipe.id)
+                            }
                         )
                     }
                 }

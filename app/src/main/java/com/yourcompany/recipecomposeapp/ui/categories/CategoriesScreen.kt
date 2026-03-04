@@ -9,9 +9,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.yourcompany.recipecomposeapp.R
 import com.yourcompany.recipecomposeapp.data.repository.RecipesRepositoryStub
 import com.yourcompany.recipecomposeapp.ui.categories.model.toUiModel
 import com.yourcompany.recipecomposeapp.ui.components.ScreenHeader
@@ -26,8 +24,8 @@ fun CategoriesScreen(
         modifier = modifier
     ) {
         ScreenHeader(
-            painter = painterResource(R.drawable.bcg_categories),
-            painterContent = "Заголовок категорий",
+            image = "file:///android_asset/categories.png",
+            imageContentDescription = "Заголовок категорий",
             text = "КАТЕГОРИИ",
         )
 

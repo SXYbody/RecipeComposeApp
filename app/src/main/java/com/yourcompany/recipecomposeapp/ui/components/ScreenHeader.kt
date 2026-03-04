@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,6 +17,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,15 +34,17 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 
 import com.yourcompany.recipecomposeapp.R
 
 @Composable
 fun ScreenHeader(
-    painter: Painter,
-    painterContent: String,
+    image: String,
+    imageContentDescription: String,
     text: String,
     showShareButton: Boolean = false,
     onShareClick: () -> Unit = {},
@@ -53,11 +57,14 @@ fun ScreenHeader(
             .fillMaxWidth()
             .height(300.dp)
     ) {
-        Image(
-            painter = painter,
-            contentDescription = painterContent,
+        AsyncImage(
+            model = image,
+            placeholder = painterResource(R.drawable.ic_launcher_background),
+            error = painterResource(R.drawable.ic_launcher_foreground),
+            contentDescription = imageContentDescription,
             contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxWidth()
         )
 
         Row(
@@ -110,18 +117,11 @@ fun ScreenHeader(
         ) {
             Text(
                 text = text,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
             )
         }
     }
-}
-
-@Preview
-@Composable
-fun ScreenHeaderPreview() {
-    ScreenHeader(
-        painter = painterResource(R.drawable.bcg_favorites),
-        painterContent = "Бургер",
-        text = "КАТЕГОРИИ",
-    )
 }
