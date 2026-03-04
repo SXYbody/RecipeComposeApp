@@ -37,6 +37,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 
 import com.yourcompany.recipecomposeapp.R
@@ -117,9 +118,10 @@ fun ScreenHeader(
         ) {
             Text(
                 text = text,
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
+                fontSize = 25.sp,
                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
             )
         }

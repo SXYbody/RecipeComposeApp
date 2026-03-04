@@ -1,9 +1,15 @@
 package com.yourcompany.recipecomposeapp.ui.details
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -16,7 +22,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.yourcompany.recipecomposeapp.R
 import com.yourcompany.recipecomposeapp.ui.components.ScreenHeader
 import com.yourcompany.recipecomposeapp.ui.recipes.model.RecipeUiModel
@@ -52,6 +62,7 @@ fun RecipeDetailsScreen(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
+            .windowInsetsPadding(WindowInsets.navigationBars),
     ) {
         ScreenHeader(
             image = recipe.imageUrl,
@@ -61,21 +72,49 @@ fun RecipeDetailsScreen(
             onShareClick = { shareRecipe(context, recipe.id, recipe.title) },
             showFavoriteButton = true,
             isFavorite = isFavorite,
-            onFavoriteClick = { isFavorite = !isFavorite
+            onFavoriteClick = {
+                isFavorite = !isFavorite
                 onFavoriteToggle(isFavorite)
             },
+        )
+
+        Text(
+            text = "ИНГРЕДИЕНТЫ",
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(10.dp),
+            fontSize = 25.sp
+        )
+
+        Text(
+            text = portionsText,
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontWeight = FontWeight.SemiBold,
+            modifier = Modifier.padding(horizontal = 10.dp)
         )
 
         PortionsSlider(
             currentPortions = currentPortions,
             onPortionsChange = { newValue ->
                 currentPortions = newValue
-            }
+            },
         )
-        Text(portionsText)
 
         IngredientsList(scaledIngredients)
 
-        Text(text = recipe.method)
+        Text(
+            text = "СПОСОБ ПРИГОТОВЛЕНИЯ",
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(10.dp),
+            fontSize = 25.sp
+        )
+
+        MethodList(recipe.method)
     }
 }
