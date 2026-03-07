@@ -37,8 +37,7 @@ import com.yourcompany.recipecomposeapp.ui.utils.shareRecipe
 fun RecipeDetailsScreen(
     recipe: RecipeUiModel,
     favoritePrefs: FavoritePrefsManager,
-    isFavorite: Boolean = false,
-    onFavoriteToggle: (Boolean) -> Unit = {},
+    isFavorite: Boolean = favoritePrefs.isFavorite(recipe.id),
 ) {
     var currentPortions by rememberSaveable { mutableIntStateOf(recipe.servings) }
     val scaledIngredients = remember(currentPortions, recipe.ingredients) {
@@ -49,7 +48,7 @@ fun RecipeDetailsScreen(
             )
         }
     }
-    var isFavorite by rememberSaveable { mutableStateOf(isFavorite) }
+    var isFavoriteSave by rememberSaveable { mutableStateOf(isFavorite) }
 
     val portionsText = pluralStringResource(
         R.plurals.portions_count,
@@ -71,10 +70,11 @@ fun RecipeDetailsScreen(
             showShareButton = true,
             onShareClick = { shareRecipe(context, recipe.id, recipe.title) },
             showFavoriteButton = true,
-            isFavorite = isFavorite,
+            isFavorite = isFavoriteSave,
             onFavoriteClick = {
-                isFavorite = !isFavorite
-                onFavoriteToggle(isFavorite)
+                isFavoriteSave = !isFavoriteSave
+                if (isFavoriteSave) favoritePrefs.addToFavorite(recipe.id)
+                else favoritePrefs.removeToFavorite(recipe.id)
             },
         )
 
