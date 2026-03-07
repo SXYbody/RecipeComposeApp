@@ -21,11 +21,18 @@ val TextSecondaryColor = Color(0xFF666666) // Второстепенный те�
 
 private val RecipesAppLightColorScheme = lightColorScheme(
     primary = PrimaryColor,
+    onPrimary = BackgroundColor,
     error = AccentColor,
+    onError = TextPrimaryColor,
     tertiary = AccentBlue,
+    onTertiary = TextPrimaryColor,
     tertiaryContainer = SliderTrackColor,
     background = BackgroundColor,
+    onBackground = TextPrimaryColor,
     surface = SurfaceColor,
+    onSurface = TextPrimaryColor,
+    surfaceVariant = SurfaceVariantColor,
+    onSurfaceVariant = TextSecondaryColor,
     outline = DividerColor,
 )
 val PrimaryColorDark = Color(0xFF9A9EFF) // Фиолетовый для заголовков и акцентов
@@ -42,11 +49,18 @@ val TextSecondaryColorDark = Color(0xFFB0B0B0) // Второстепенный �
 
 private val RecipesAppDarkColorScheme = darkColorScheme(
     primary = PrimaryColorDark,
+    onPrimary = TextPrimaryColorDark,
     error = AccentColorDark,
+    onError = TextPrimaryColorDark,
     tertiary = AccentBlueDark,
+    onTertiary = TextPrimaryColorDark,
     tertiaryContainer = SliderTrackColorDark,
     background = BackgroundColorDark,
+    onBackground = TextPrimaryColorDark,
     surface = SurfaceColorDark,
+    onSurface = TextPrimaryColorDark,
+    surfaceVariant = SurfaceVariantColorDark,
+    onSurfaceVariant = TextSecondaryColorDark,
     outline = DividerColorDark,
 )
 

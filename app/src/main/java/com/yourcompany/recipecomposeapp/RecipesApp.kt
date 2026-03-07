@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -28,7 +29,9 @@ import com.yourcompany.recipecomposeapp.ui.navigation.BottomNavigation
 import com.yourcompany.recipecomposeapp.ui.navigation.Destination
 import com.yourcompany.recipecomposeapp.ui.recipes.RecipesScreen
 import com.yourcompany.recipecomposeapp.ui.recipes.model.RecipeUiModel
+import com.yourcompany.recipecomposeapp.ui.recipes.model.toUiModel
 import com.yourcompany.recipecomposeapp.ui.theme.RecipeComposeAppTheme
+import com.yourcompany.recipecomposeapp.ui.utils.FavoritePrefsManager
 import kotlinx.coroutines.delay
 
 @Preview
@@ -39,6 +42,7 @@ fun RecipesApp(
     RecipeComposeAppTheme() {
         var selectedCategoryTitle by remember { mutableStateOf<String?>(null) }
         val navController = rememberNavController()
+        val favoritePref = FavoritePrefsManager(LocalContext.current)
 
         AppNavHost(navController = navController, deepLinkIntent = intent)
 
@@ -76,8 +80,22 @@ fun RecipesApp(
                             modifier = Modifier
                                 .padding(paddingValues)
                                 .fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) { FavoriteScreen() }
+                            contentAlignment = Alignment.TopStart
+                        ) {
+                            FavoriteScreen(
+                                onClickRecipe = { recipeId ->
+                                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                                        "recipe",
+                                        RecipesRepositoryStub.getRecipeById(recipeId)?.toUiModel()
+                                    )
+                                    navController.navigate(
+                                        Destination.Ingredients.createRoute(
+                                            recipeId
+                                        )
+                                    )
+                                },
+                            )
+                        }
                     }
 
                     composable(
@@ -89,7 +107,7 @@ fun RecipesApp(
                             modifier = Modifier
                                 .padding(paddingValues)
                                 .fillMaxSize(),
-                            contentAlignment = Alignment.Center
+                            contentAlignment = Alignment.TopStart
                         ) {
                             RecipesScreen(
                                 categoryId = categoryId,
@@ -118,8 +136,15 @@ fun RecipesApp(
                             navController.previousBackStackEntry?.savedStateHandle?.get<RecipeUiModel>(
                                 Constants.KEY_RECIPE_OBJECT
                             )
+                        if (recipe == null) return@composable
+
                         RecipeDetailsScreen(
-                            recipe = recipe
+                            recipe = recipe,
+                            favoritePrefs = favoritePref,
+                            onFavoriteToggle = { isFavorite ->
+                                if (isFavorite) favoritePref.addToFavorite(recipe.id)
+                                else favoritePref.removeToFavorite(recipe.id)
+                            }
                         )
                     }
                 }
