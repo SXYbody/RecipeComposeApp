@@ -41,9 +41,10 @@ fun RecipesApp(
     intent: Intent? = null
 ) {
     RecipeComposeAppTheme() {
+        val context = LocalContext.current
         var selectedCategoryTitle by remember { mutableStateOf<String?>(null) }
         val navController = rememberNavController()
-        val favoritePref = FavoritePrefsManager(LocalContext.current)
+        val favoritePref = remember { FavoritePrefsManager(context) }
 
         AppNavHost(navController = navController, deepLinkIntent = intent)
 
