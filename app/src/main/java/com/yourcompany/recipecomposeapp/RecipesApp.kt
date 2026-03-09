@@ -10,7 +10,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,6 +31,7 @@ import com.yourcompany.recipecomposeapp.ui.recipes.RecipesScreen
 import com.yourcompany.recipecomposeapp.ui.recipes.model.RecipeUiModel
 import com.yourcompany.recipecomposeapp.ui.recipes.model.toUiModel
 import com.yourcompany.recipecomposeapp.ui.theme.RecipeComposeAppTheme
+import com.yourcompany.recipecomposeapp.ui.utils.AppDataStoreManager
 import com.yourcompany.recipecomposeapp.ui.utils.FavoritePrefsManager
 import kotlinx.coroutines.delay
 
@@ -44,7 +44,7 @@ fun RecipesApp(
         val context = LocalContext.current
         var selectedCategoryTitle by remember { mutableStateOf<String?>(null) }
         val navController = rememberNavController()
-        val favoritePref = remember { FavoritePrefsManager(context) }
+        val appData = remember { AppDataStoreManager(context) }
 
         AppNavHost(navController = navController, deepLinkIntent = intent)
 
@@ -142,7 +142,7 @@ fun RecipesApp(
 
                         RecipeDetailsScreen(
                             recipe = recipe,
-                            favoritePrefs = favoritePref,
+                            appData = appData,
                         )
                     }
                 }
