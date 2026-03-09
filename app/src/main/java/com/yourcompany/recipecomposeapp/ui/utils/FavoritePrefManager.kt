@@ -2,6 +2,7 @@ package com.yourcompany.recipecomposeapp.ui.utils
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import com.yourcompany.recipecomposeapp.data.repository.RecipesRepositoryStub
 import com.yourcompany.recipecomposeapp.ui.recipes.model.RecipeUiModel
 import com.yourcompany.recipecomposeapp.ui.recipes.model.toUiModel
@@ -26,7 +27,7 @@ class FavoritePrefsManager (
         val updatedFavorites = currentFavorites?.toMutableSet() ?: mutableSetOf()
         updatedFavorites.add(recipeId.toString())
 
-        sharedPreferences.edit().putStringSet("favorite_recipe_ids", updatedFavorites).commit()
+        sharedPreferences.edit { putStringSet("favorite_recipe_ids", updatedFavorites) }
 
     }
 
@@ -36,7 +37,7 @@ class FavoritePrefsManager (
         val updatedFavorites = currentFavorites?.toMutableSet() ?: mutableSetOf()
         updatedFavorites.remove(recipeId.toString())
 
-        sharedPreferences.edit().putStringSet("favorite_recipe_ids", updatedFavorites).commit()
+        sharedPreferences.edit { putStringSet("favorite_recipe_ids", updatedFavorites) }
     }
 
     fun getAllFavorites(): Set<String>? =
