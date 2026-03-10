@@ -63,7 +63,9 @@ class AppDataStoreManager(
         val preferences = context.dataStore.data.first()
         val allFavoritesSet = preferences[PreferencesKeys.FAVORITE_RECIPE_IDS] ?: return emptyList()
 
-        val allFavoritesUiModel = allFavoritesSet.map { RecipesRepositoryStub.getRecipeById(it.toInt())!!.toUiModel() }
+        val allFavoritesUiModel = allFavoritesSet.mapNotNull {
+            RecipesRepositoryStub.getRecipeById(it.toInt())?.toUiModel()
+        }
         return allFavoritesUiModel
     }
 }

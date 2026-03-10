@@ -31,7 +31,8 @@ fun FavoriteScreen(
     modifier: Modifier = Modifier,
     onClickRecipe: (Int) -> Unit,
 ) {
-    val appData = AppDataStoreManager(LocalContext.current)
+    val content = LocalContext.current
+    val appData = remember { AppDataStoreManager(content) }
     val favoriteSet: MutableList<RecipeUiModel> = remember { mutableStateListOf() }
 
     LaunchedEffect(Unit) {
