@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -47,11 +48,7 @@ fun RecipeDetailsScreen(
             )
         }
     }
-    var isFavoriteSave by rememberSaveable { mutableStateOf(false) }
-
-    LaunchedEffect(recipe.id) {
-        isFavoriteSave = appData.isFavorite(recipe.id)
-    }
+    val isFavoriteSave: Boolean by appData.isFavoriteFlow(recipe.id).collectAsState(initial = false)
 
     val portionsText = pluralStringResource(
         R.plurals.portions_count,
@@ -75,11 +72,9 @@ fun RecipeDetailsScreen(
             showFavoriteButton = true,
             isFavorite = isFavoriteSave,
             onFavoriteClick = {
-                isFavoriteSave = !isFavoriteSave
-
                 coroutineScope.launch {
-                    if (isFavoriteSave) appData.addFavorite(recipe.id)
-                    else appData.removeFavorite(recipe.id)
+                    if (isFavoriteSave) appData.removeFavorite(recipe.id)
+                    else appData.addFavorite(recipe.id)
                 }
             },
         )

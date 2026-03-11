@@ -155,6 +155,7 @@ fun RecipesApp(
                     onFavoriteClick = {
                         navController.navigate(Destination.Favorites.route)
                     },
+                    appData = appData
                 )
             }
         )
