@@ -11,7 +11,12 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.yourcompany.recipecomposeapp.data.repository.RecipesRepositoryStub
 import com.yourcompany.recipecomposeapp.ui.recipes.model.RecipeUiModel
 import com.yourcompany.recipecomposeapp.ui.recipes.model.toUiModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
     name = "recipe_app_prefs",
     produceMigrations = { context ->
@@ -67,5 +72,21 @@ class AppDataStoreManager(
             RecipesRepositoryStub.getRecipeById(it.toInt())?.toUiModel()
         }
         return allFavoritesUiModel
+    }
+
+    fun getFavoriteIdsFlow(): Flow<Set<String>> {
+        return context.dataStore.data.map { preferences ->
+            preferences[PreferencesKeys.FAVORITE_RECIPE_IDS] ?: emptySet()
+        }
+    }
+
+    fun isFavoriteFlow(recipeId: Int): Flow<Boolean> {
+        return getFavoriteIdsFlow().map { favoriteIds ->
+            favoriteIds.contains(recipeId.toString())
+        }
+    }
+
+    fun getFavoriteCountFlow(): Flow<Int> {
+        return getFavoriteIdsFlow().map { it.size }
     }
 }
