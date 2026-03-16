@@ -53,7 +53,7 @@ fun RecipesScreen(
 
     Column(
         verticalArrangement = Arrangement.Top,
-        modifier = modifier
+        modifier = modifier.fillMaxSize()
     ) {
         category?.let {
             ScreenHeader(
@@ -64,7 +64,7 @@ fun RecipesScreen(
         }
 
         LazyColumn(
-            modifier = modifier.fillMaxSize(),
+            modifier = modifier.fillMaxSize().weight(1f),
             contentPadding = PaddingValues(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {

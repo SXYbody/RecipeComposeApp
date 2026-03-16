@@ -85,7 +85,7 @@ fun RecipeDetailsScreen(
             color = MaterialTheme.colorScheme.primary,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
-                .padding(10.dp),
+                .padding(horizontal = 16.dp, vertical = 12.dp),
             fontSize = 25.sp
         )
 
@@ -94,7 +94,7 @@ fun RecipeDetailsScreen(
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.padding(horizontal = 10.dp)
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
 
         PortionsSlider(
@@ -112,7 +112,7 @@ fun RecipeDetailsScreen(
             color = MaterialTheme.colorScheme.primary,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
-                .padding(10.dp),
+                .padding(horizontal = 16.dp, vertical = 12.dp),
             fontSize = 25.sp
         )
 

@@ -72,6 +72,7 @@ fun PortionsSlider(
         value = currentPortions.toFloat(),
         onValueChange = { onPortionsChange(it.roundToInt()) },
         valueRange = 1f..12f,
+        modifier = Modifier.padding(horizontal = 16.dp),
         colors = SliderDefaults.colors(
             thumbColor = MaterialTheme.colorScheme.tertiary,
             activeTrackColor = MaterialTheme.colorScheme.tertiaryContainer,
@@ -86,7 +87,7 @@ fun IngredientsList(
 ) {
     Card(
         modifier = Modifier
-            .padding(10.dp),
+            .padding(horizontal = 16.dp),
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
@@ -110,7 +111,8 @@ fun MethodList(
 ) {
     Card(
         modifier = Modifier
-            .padding(10.dp),
+            .padding(horizontal = 16.dp)
+            .padding(bottom = 50.dp),
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
