@@ -23,6 +23,7 @@ import com.yourcompany.recipecomposeapp.ui.recipes.RecipeItem
 import com.yourcompany.recipecomposeapp.ui.recipes.model.RecipeUiModel
 import com.yourcompany.recipecomposeapp.ui.recipes.model.toUiModel
 import com.yourcompany.recipecomposeapp.ui.utils.AppDataStoreManager
+import kotlinx.coroutines.flow.map
 
 @Composable
 fun FavoriteScreen(
@@ -31,12 +32,9 @@ fun FavoriteScreen(
     recipesRepository: RecipesRepositoryStub,
     appData: AppDataStoreManager,
 ) {
-    val favoriteFlow = appData.getFavoriteIdsFlow().collectAsState(initial = emptySet())
-    val favoriteListModel: List<RecipeUiModel> =
-        favoriteFlow.value.mapNotNull { ids ->
-            recipesRepository.getRecipeById(ids.toInt())?.toUiModel()
-        }
-
+    val favoriteListModel = appData.getFavoriteIdsFlow().map { ids ->
+        ids.mapNotNull { recipesRepository.getRecipeById(it.toInt())?.toUiModel() }
+    }.collectAsState(initial = emptyList())
 
     Column {
         ScreenHeader(
@@ -45,7 +43,7 @@ fun FavoriteScreen(
             text = "ИЗБРАННОЕ",
         )
 
-        if (favoriteListModel.isEmpty()) {
+        if (favoriteListModel.value.isEmpty()) {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -68,7 +66,7 @@ fun FavoriteScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(
-                items = favoriteListModel,
+                items = favoriteListModel.value,
                 key = { it.id }
             ) { recipe ->
                 RecipeItem(
