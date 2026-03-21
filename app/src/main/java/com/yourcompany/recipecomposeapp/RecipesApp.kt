@@ -96,6 +96,8 @@ fun RecipesApp(
                                         )
                                     )
                                 },
+                                recipesRepository = RecipesRepositoryStub,
+                                appData = AppDataStoreManager(LocalContext.current)
                             )
                         }
                     }

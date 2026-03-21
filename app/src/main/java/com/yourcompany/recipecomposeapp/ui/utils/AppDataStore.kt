@@ -64,16 +64,6 @@ class AppDataStoreManager(
         return preferences[PreferencesKeys.FAVORITE_RECIPE_IDS] ?: emptySet()
     }
 
-    suspend fun getAllFavoriteToModels(): List<RecipeUiModel> {
-        val preferences = context.dataStore.data.first()
-        val allFavoritesSet = preferences[PreferencesKeys.FAVORITE_RECIPE_IDS] ?: return emptyList()
-
-        val allFavoritesUiModel = allFavoritesSet.mapNotNull {
-            RecipesRepositoryStub.getRecipeById(it.toInt())?.toUiModel()
-        }
-        return allFavoritesUiModel
-    }
-
     fun getFavoriteIdsFlow(): Flow<Set<String>> {
         return context.dataStore.data.map { preferences ->
             preferences[PreferencesKeys.FAVORITE_RECIPE_IDS] ?: emptySet()
