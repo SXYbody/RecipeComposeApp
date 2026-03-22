@@ -3,8 +3,8 @@ package com.yourcompany.recipecomposeapp.data.repository
 import com.yourcompany.recipecomposeapp.data.model.CategoryDto
 import com.yourcompany.recipecomposeapp.data.model.IngredientDto
 import com.yourcompany.recipecomposeapp.data.model.RecipeDto
-import com.yourcompany.recipecomposeapp.ui.categories.model.CategoryUiModel
-import com.yourcompany.recipecomposeapp.ui.categories.model.toUiModel
+import com.yourcompany.recipecomposeapp.features.categories.presentation.model.CategoryUiModel
+import com.yourcompany.recipecomposeapp.features.categories.presentation.model.toUiModel
 
 object RecipesRepositoryStub {
     private val categories: List<CategoryDto> = listOf(
