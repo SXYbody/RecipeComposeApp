@@ -29,7 +29,7 @@ import com.yourcompany.recipecomposeapp.features.core.ui.components.ScreenHeader
 @Composable
 fun CategoriesScreen(
     modifier: Modifier = Modifier,
-    onClickCategory: (Int) -> Unit,
+    onClickCategory: (Int, String, String) -> Unit,
 ) {
     val viewModel: CategoriesViewModel = viewModel()
     val uiState by viewModel.uiState.collectAsState()
@@ -80,7 +80,7 @@ fun CategoriesScreen(
                         key = { it.id }) { category ->
                         CategoryItem(
                             onClick = {
-                                onClickCategory(category.id)
+                                onClickCategory(category.id, category.title, category.imageUrl)
                             },
                             image = category.imageUrl,
                             imageContentDescription = "Картинка категории",

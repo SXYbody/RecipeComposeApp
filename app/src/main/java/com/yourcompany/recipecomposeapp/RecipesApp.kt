@@ -63,14 +63,13 @@ fun RecipesApp(
                             contentAlignment = Alignment.Center
                         ) {
                             CategoriesScreen(
-                                onClickCategory = { categoryId ->
+                                onClickCategory = { categoryId, categoryTitle, categoryImageUrl ->
                                     navController.navigate(
                                         Destination.Recipes.createRoute(
                                             categoryId
                                         )
                                     )
-                                    selectedCategoryTitle =
-                                        RecipesRepositoryStub.getCategoryByCategoryId(categoryId)?.title
+                                    selectedCategoryTitle = categoryTitle
                                 }
                             )
                         }
