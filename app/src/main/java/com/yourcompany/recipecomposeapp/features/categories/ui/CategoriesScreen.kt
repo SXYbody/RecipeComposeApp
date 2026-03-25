@@ -1,6 +1,7 @@
 package com.yourcompany.recipecomposeapp.features.categories.ui
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,25 +37,36 @@ fun CategoriesScreen(
 
     when {
         uiState.isLoading -> {
-            Text(
-                text = "LOADING",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
-                fontSize = 25.sp,
-                textAlign = TextAlign.Center
-            )
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "LOADING",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = 25.sp,
+                    textAlign = TextAlign.Center
+                )
+            }
+
         }
 
         uiState.error != null -> {
-            Text(
-                text = "Рецепты не удалось загрузить",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
-                fontSize = 25.sp,
-                textAlign = TextAlign.Center
-            )
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Категории не удалось загрузить",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = 25.sp,
+                    textAlign = TextAlign.Center
+                )
+            }
         }
 
         else -> {

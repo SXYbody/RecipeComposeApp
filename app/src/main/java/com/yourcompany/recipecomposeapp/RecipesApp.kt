@@ -41,7 +41,6 @@ fun RecipesApp(
 ) {
     RecipeComposeAppTheme() {
         val context = LocalContext.current
-        var selectedCategoryTitle by remember { mutableStateOf<String?>(null) }
         val navController = rememberNavController()
         val appData = remember { AppDataStoreManager(context) }
 
@@ -66,10 +65,9 @@ fun RecipesApp(
                                 onClickCategory = { categoryId, categoryTitle, categoryImageUrl ->
                                     navController.navigate(
                                         Destination.Recipes.createRoute(
-                                            categoryId
+                                            categoryId, categoryTitle, categoryImageUrl
                                         )
                                     )
-                                    selectedCategoryTitle = categoryTitle
                                 }
                             )
                         }
@@ -112,7 +110,6 @@ fun RecipesApp(
                             contentAlignment = Alignment.TopStart
                         ) {
                             RecipesScreen(
-                                categoryId = categoryId,
                                 onRecipeClick = { recipeId, recipeUiModel ->
                                     navController.currentBackStackEntry?.savedStateHandle?.set(
                                         "recipe",
@@ -124,8 +121,6 @@ fun RecipesApp(
                                         )
                                     )
                                 },
-                                titleRecipeScreen = selectedCategoryTitle
-                                    ?: error("Category title is required")
                             )
                         }
                     }
