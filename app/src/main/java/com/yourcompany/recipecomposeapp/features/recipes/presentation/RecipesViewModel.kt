@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.net.URLDecoder
 
 class RecipesViewModel(
     private val savedStateHandle: SavedStateHandle
@@ -22,7 +23,7 @@ class RecipesViewModel(
         checkNotNull(savedStateHandle["categoryTitle"])
 
     private val categoryImageUrl: String =
-        checkNotNull(savedStateHandle["categoryImageUrl"])
+        URLDecoder.decode(checkNotNull(savedStateHandle["categoryImageUrl"]), "UTF-8")
 
     private val _uiState: MutableStateFlow<RecipesUiState> = MutableStateFlow(RecipesUiState())
     val uiState: StateFlow<RecipesUiState> = _uiState.asStateFlow()

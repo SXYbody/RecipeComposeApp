@@ -100,9 +100,11 @@ fun RecipesApp(
 
                     composable(
                         route = Destination.Recipes.route,
-                        arguments = listOf(navArgument("categoryId") { type = NavType.IntType })
-                    ) { backStackEntry ->
-                        val categoryId = backStackEntry.arguments?.getInt("categoryId") ?: 0
+                        arguments = listOf(
+                            navArgument("categoryId") { type = NavType.IntType },
+                            navArgument("categoryTitle") { type = NavType.StringType },
+                            navArgument("categoryImageUrl") { type = NavType.StringType })
+                    ) {
                         Box(
                             modifier = Modifier
                                 .padding(paddingValues)
