@@ -1,65 +1,109 @@
 package com.yourcompany.recipecomposeapp.features.recipes.ui
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.yourcompany.recipecomposeapp.data.repository.RecipesRepositoryStub
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yourcompany.recipecomposeapp.features.core.ui.components.ScreenHeader
+import com.yourcompany.recipecomposeapp.features.recipes.presentation.RecipesViewModel
 import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
-import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.toUiModel
 
 @Composable
 fun RecipesScreen(
-    categoryId: Int,
+    viewModel: RecipesViewModel = viewModel(),
     modifier: Modifier = Modifier,
     onRecipeClick: (Int, RecipeUiModel) -> Unit,
-    titleRecipeScreen: String,
 ) {
-    var recipes by remember { mutableStateOf<List<RecipeUiModel>>(emptyList()) }
-    val category = RecipesRepositoryStub.getCategoryByCategoryId(categoryId)
+    val uiState by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(categoryId) {
-        categoryId.let {
-            recipes =
-                RecipesRepositoryStub.getRecipesByCategoryId(it).map { dto -> dto.toUiModel() }
-        }
-    }
-
-    Column(
-        verticalArrangement = Arrangement.Top,
-        modifier = modifier.fillMaxSize()
-    ) {
-        category?.let {
-            ScreenHeader(
-                image = it.imageUrl,
-                imageContentDescription = "Рецепты категории",
-                text = titleRecipeScreen
-            )
-        }
-
-        LazyColumn(
-            modifier = modifier.fillMaxSize().weight(1f),
-            contentPadding = PaddingValues(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            items(recipes, key = { it.id }) { recipe ->
-                RecipeItem(
-                    recipe = recipe,
-                    onRecipeClick = {
-                        onRecipeClick(recipe.id, recipe)
-                    },
+    when {
+        uiState.isLoading -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "LOADING",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = 25.sp,
+                    textAlign = TextAlign.Center
                 )
+            }
+        }
+
+        uiState.error != null -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Рецепты не удалось загрузить",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = 25.sp,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+
+        uiState.isEmpty -> {
+            Text(
+                text = "Рецептов в этой категории нету",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 25.sp,
+                textAlign = TextAlign.Center
+            )
+
+        }
+
+        else -> {
+            Column(
+                verticalArrangement = Arrangement.Top,
+                modifier = modifier.fillMaxSize()
+            ) {
+
+                ScreenHeader(
+                    image = uiState.categoryImageUrl,
+                    imageContentDescription = "Рецепты категории",
+                    text = uiState.categoryTitle
+                )
+
+                LazyColumn(
+                    modifier = modifier
+                        .fillMaxSize()
+                        .weight(1f),
+                    contentPadding = PaddingValues(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    items(uiState.recipesList, key = { it.id }) { recipe ->
+                        RecipeItem(
+                            recipe = recipe,
+                            onRecipeClick = {
+                                onRecipeClick(recipe.id, recipe)
+                            },
+                        )
+                    }
+                }
             }
         }
     }

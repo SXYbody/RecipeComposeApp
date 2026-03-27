@@ -41,7 +41,6 @@ fun RecipesApp(
 ) {
     RecipeComposeAppTheme() {
         val context = LocalContext.current
-        var selectedCategoryTitle by remember { mutableStateOf<String?>(null) }
         val navController = rememberNavController()
         val appData = remember { AppDataStoreManager(context) }
 
@@ -66,10 +65,9 @@ fun RecipesApp(
                                 onClickCategory = { categoryId, categoryTitle, categoryImageUrl ->
                                     navController.navigate(
                                         Destination.Recipes.createRoute(
-                                            categoryId
+                                            categoryId, categoryTitle, categoryImageUrl
                                         )
                                     )
-                                    selectedCategoryTitle = categoryTitle
                                 }
                             )
                         }
@@ -102,9 +100,11 @@ fun RecipesApp(
 
                     composable(
                         route = Destination.Recipes.route,
-                        arguments = listOf(navArgument("categoryId") { type = NavType.IntType })
-                    ) { backStackEntry ->
-                        val categoryId = backStackEntry.arguments?.getInt("categoryId") ?: 0
+                        arguments = listOf(
+                            navArgument("categoryId") { type = NavType.IntType },
+                            navArgument("categoryTitle") { type = NavType.StringType },
+                            navArgument("categoryImageUrl") { type = NavType.StringType })
+                    ) {
                         Box(
                             modifier = Modifier
                                 .padding(paddingValues)
@@ -112,7 +112,6 @@ fun RecipesApp(
                             contentAlignment = Alignment.TopStart
                         ) {
                             RecipesScreen(
-                                categoryId = categoryId,
                                 onRecipeClick = { recipeId, recipeUiModel ->
                                     navController.currentBackStackEntry?.savedStateHandle?.set(
                                         "recipe",
@@ -124,8 +123,6 @@ fun RecipesApp(
                                         )
                                     )
                                 },
-                                titleRecipeScreen = selectedCategoryTitle
-                                    ?: error("Category title is required")
                             )
                         }
                     }
