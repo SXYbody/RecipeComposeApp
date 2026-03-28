@@ -24,29 +24,41 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.createSavedStateHandle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.yourcompany.recipecomposeapp.R
+import com.yourcompany.recipecomposeapp.features.categories.presentation.CategoriesViewModel
 import com.yourcompany.recipecomposeapp.features.core.ui.components.ScreenHeader
 import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 import com.yourcompany.recipecomposeapp.features.core.utils.AppDataStoreManager
 import com.yourcompany.recipecomposeapp.features.core.utils.shareRecipe
+import com.yourcompany.recipecomposeapp.features.details.presentation.RecipeDetailsViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun RecipeDetailsScreen(
-    recipe: RecipeUiModel,
-    appData: AppDataStoreManager,
-) {
-    val coroutineScope = rememberCoroutineScope()
-    var currentPortions by rememberSaveable { mutableIntStateOf(recipe.servings) }
-    val scaledIngredients = remember(currentPortions, recipe.ingredients) {
-        val multiplier = currentPortions.toDouble() / recipe.servings
-        recipe.ingredients.map { ingredient ->
-            ingredient.copy(
-                quantity = ingredient.quantity * multiplier
-            )
+fun RecipeDetailsScreen() {
+
+    val viewModel: RecipeDetailsViewModel = viewModel(
+        factory = viewModelFactory {
+            initializer {
+                val application = checkNotNull(this[APPLICATION_KEY])
+                val savedStateHandle = createSavedStateHandle()
+                RecipeDetailsViewModel(
+                    application = application,
+                    savedStateHandle = savedStateHandle,
+                )
+            }
         }
-    }
-    val isFavoriteSave: Boolean by appData.isFavoriteFlow(recipe.id).collectAsState(initial = false)
+    )
+    val uiState by viewModel.uiState.collectAsState()
+
+    val recipe = uiState.recipe
+    val currentPortions = uiState.currentPortions
+    val scaledIngredients = uiState.scaledIngredients
+    val isFavoriteSave: Boolean = uiState.isFavoriteSave
 
     val portionsText = pluralStringResource(
         R.plurals.portions_count,
@@ -70,10 +82,7 @@ fun RecipeDetailsScreen(
             showFavoriteButton = true,
             isFavorite = isFavoriteSave,
             onFavoriteClick = {
-                coroutineScope.launch {
-                    if (isFavoriteSave) appData.removeFavorite(recipe.id)
-                    else appData.addFavorite(recipe.id)
-                }
+                viewModel.toggleFavorite()
             },
         )
 
@@ -98,7 +107,7 @@ fun RecipeDetailsScreen(
         PortionsSlider(
             currentPortions = currentPortions,
             onPortionsChange = { newValue ->
-                currentPortions = newValue
+                viewModel.updatePortions(newValue)
             },
         )
 

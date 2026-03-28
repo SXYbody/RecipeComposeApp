@@ -27,7 +27,7 @@ import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.Reci
 fun RecipesScreen(
     viewModel: RecipesViewModel = viewModel(),
     modifier: Modifier = Modifier,
-    onRecipeClick: (Int, RecipeUiModel) -> Unit,
+    onRecipeClick: (Int) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -99,7 +99,7 @@ fun RecipesScreen(
                         RecipeItem(
                             recipe = recipe,
                             onRecipeClick = {
-                                onRecipeClick(recipe.id, recipe)
+                                onRecipeClick(recipe.id)
                             },
                         )
                     }

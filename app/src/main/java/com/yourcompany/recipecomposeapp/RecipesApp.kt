@@ -112,11 +112,7 @@ fun RecipesApp(
                             contentAlignment = Alignment.TopStart
                         ) {
                             RecipesScreen(
-                                onRecipeClick = { recipeId, recipeUiModel ->
-                                    navController.currentBackStackEntry?.savedStateHandle?.set(
-                                        "recipe",
-                                        recipeUiModel
-                                    )
+                                onRecipeClick = { recipeId ->
                                     navController.navigate(
                                         Destination.Ingredients.createRoute(
                                             recipeId
@@ -131,16 +127,7 @@ fun RecipesApp(
                         route = Destination.Ingredients.route,
                         arguments = listOf(navArgument("recipeId") { type = NavType.IntType })
                     ) {
-                        val recipe =
-                            navController.previousBackStackEntry?.savedStateHandle?.get<RecipeUiModel>(
-                                Constants.KEY_RECIPE_OBJECT
-                            )
-                        if (recipe == null) return@composable
-
-                        RecipeDetailsScreen(
-                            recipe = recipe,
-                            appData = appData,
-                        )
+                        RecipeDetailsScreen()
                     }
                 }
             },

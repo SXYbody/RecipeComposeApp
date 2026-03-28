@@ -8,13 +8,13 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 @Immutable
 data class IngredientUiModel(
-    val quantity: String,
-    val amount: String,
     val description: String,
+    val quantity: String,
+    val unitOfMeasure: String,
 ): Parcelable
 
 fun IngredientDto.toUiModel() = IngredientUiModel(
-    quantity = quantity.toString(),
-    amount = unitOfMeasure,
     description = description,
+    quantity = quantity.toString(),
+    unitOfMeasure = unitOfMeasure,
 )

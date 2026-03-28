@@ -17,21 +17,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.yourcompany.recipecomposeapp.data.model.IngredientDto
+import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.IngredientUiModel
 import kotlin.math.roundToInt
 
 @Composable
 fun IngredientItem(
     title: String,
-    quantity: Double,
+    quantity: String,
     unitOfMeasure: String,
     modifier: Modifier = Modifier
 ) {
     val measureText = when {
-        quantity >= 1 -> quantity
-        quantity >= 0.75 -> "3/4"
-        quantity >= 0.5 -> "1/2"
-        quantity >= 0.25 -> "1/4"
+        quantity.toDouble() >= 1 -> quantity
+        quantity.toDouble() >= 0.75 -> "3/4"
+        quantity.toDouble() >= 0.5 -> "1/2"
+        quantity.toDouble() >= 0.25 -> "1/4"
         else -> "щепотка"
     }
 
@@ -80,7 +80,7 @@ fun PortionsSlider(
 
 @Composable
 fun IngredientsList(
-    list: List<IngredientDto>
+    list: List<IngredientUiModel>
 ) {
     Card(
         modifier = Modifier
