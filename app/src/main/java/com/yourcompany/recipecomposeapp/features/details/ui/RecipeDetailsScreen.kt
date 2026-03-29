@@ -31,6 +31,8 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.yourcompany.recipecomposeapp.R
 import com.yourcompany.recipecomposeapp.features.categories.presentation.CategoriesViewModel
+import com.yourcompany.recipecomposeapp.features.core.ui.components.ErrorScreen
+import com.yourcompany.recipecomposeapp.features.core.ui.components.LoadingScreen
 import com.yourcompany.recipecomposeapp.features.core.ui.components.ScreenHeader
 import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 import com.yourcompany.recipecomposeapp.features.core.utils.AppDataStoreManager
@@ -55,74 +57,82 @@ fun RecipeDetailsScreen() {
     )
     val uiState by viewModel.uiState.collectAsState()
 
-    val recipe = uiState.recipe
-    val currentPortions = uiState.currentPortions
-    val scaledIngredients = uiState.scaledIngredients
-    val isFavoriteSave: Boolean = uiState.isFavoriteSave
+    when {
+        uiState.isLoading -> LoadingScreen()
 
-    val portionsText = pluralStringResource(
-        R.plurals.portions_count,
-        currentPortions,
-        currentPortions
-    )
-    val context = LocalContext.current
+        uiState.error != null -> ErrorScreen("Не удалось загрузить рецепт")
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .windowInsetsPadding(WindowInsets.navigationBars),
-    ) {
-        ScreenHeader(
-            image = recipe.imageUrl,
-            imageContentDescription = "Заголовок",
-            text = recipe.title,
-            showShareButton = true,
-            onShareClick = { shareRecipe(context, recipe.id, recipe.title) },
-            showFavoriteButton = true,
-            isFavorite = isFavoriteSave,
-            onFavoriteClick = {
-                viewModel.toggleFavorite()
-            },
-        )
+        else -> {
+            val recipe = uiState.recipe
+            val currentPortions = uiState.currentPortions
+            val scaledIngredients = uiState.scaledIngredients
+            val isFavoriteSave: Boolean = uiState.isFavoriteSave
 
-        Text(
-            text = "ИНГРЕДИЕНТЫ",
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.primary,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-            fontSize = 25.sp
-        )
+            val portionsText = pluralStringResource(
+                R.plurals.portions_count,
+                currentPortions,
+                currentPortions
+            )
+            val context = LocalContext.current
 
-        Text(
-            text = portionsText,
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.padding(horizontal = 16.dp)
-        )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .windowInsetsPadding(WindowInsets.navigationBars),
+            ) {
+                ScreenHeader(
+                    image = recipe.imageUrl,
+                    imageContentDescription = "Заголовок",
+                    text = recipe.title,
+                    showShareButton = true,
+                    onShareClick = { shareRecipe(context, recipe.id, recipe.title) },
+                    showFavoriteButton = true,
+                    isFavorite = isFavoriteSave,
+                    onFavoriteClick = {
+                        viewModel.toggleFavorite()
+                    },
+                )
 
-        PortionsSlider(
-            currentPortions = currentPortions,
-            onPortionsChange = { newValue ->
-                viewModel.updatePortions(newValue)
-            },
-        )
+                Text(
+                    text = "ИНГРЕДИЕНТЫ",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                    fontSize = 25.sp
+                )
 
-        IngredientsList(scaledIngredients)
+                Text(
+                    text = portionsText,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
 
-        Text(
-            text = "СПОСОБ ПРИГОТОВЛЕНИЯ",
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.primary,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-            fontSize = 25.sp
-        )
+                PortionsSlider(
+                    currentPortions = currentPortions,
+                    onPortionsChange = { newValue ->
+                        viewModel.updatePortions(newValue)
+                    },
+                )
 
-        MethodList(recipe.method)
+                IngredientsList(scaledIngredients)
+
+                Text(
+                    text = "СПОСОБ ПРИГОТОВЛЕНИЯ",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                    fontSize = 25.sp
+                )
+
+                MethodList(recipe.method)
+            }
+        }
     }
 }

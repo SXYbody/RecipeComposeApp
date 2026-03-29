@@ -27,11 +27,12 @@ fun IngredientItem(
     unitOfMeasure: String,
     modifier: Modifier = Modifier
 ) {
+    val quantityDouble = quantity.toDouble()
     val measureText = when {
-        quantity.toDouble() >= 1 -> quantity
-        quantity.toDouble() >= 0.75 -> "3/4"
-        quantity.toDouble() >= 0.5 -> "1/2"
-        quantity.toDouble() >= 0.25 -> "1/4"
+        quantityDouble >= 1 -> quantity
+        quantityDouble >= 0.75 -> "3/4"
+        quantityDouble >= 0.5 -> "1/2"
+        quantityDouble >= 0.25 -> "1/4"
         else -> "щепотка"
     }
 

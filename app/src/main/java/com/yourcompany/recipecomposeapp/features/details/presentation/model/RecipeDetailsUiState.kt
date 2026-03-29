@@ -1,6 +1,5 @@
 package com.yourcompany.recipecomposeapp.features.details.presentation.model
 
-import androidx.compose.runtime.remember
 import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.IngredientUiModel
 import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.toUiModel
