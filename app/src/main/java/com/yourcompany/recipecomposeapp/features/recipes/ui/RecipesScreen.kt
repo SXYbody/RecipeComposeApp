@@ -19,6 +19,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.yourcompany.recipecomposeapp.features.core.ui.components.ErrorScreen
+import com.yourcompany.recipecomposeapp.features.core.ui.components.LoadingScreen
 import com.yourcompany.recipecomposeapp.features.core.ui.components.ScreenHeader
 import com.yourcompany.recipecomposeapp.features.recipes.presentation.RecipesViewModel
 import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
@@ -27,53 +29,30 @@ import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.Reci
 fun RecipesScreen(
     viewModel: RecipesViewModel = viewModel(),
     modifier: Modifier = Modifier,
-    onRecipeClick: (Int, RecipeUiModel) -> Unit,
+    onRecipeClick: (Int) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val recipes: List<RecipeUiModel> = uiState.recipesList
 
     when {
-        uiState.isLoading -> {
+        uiState.isLoading -> LoadingScreen()
+
+        uiState.error != null -> ErrorScreen("Рецепты не удалось загрузить")
+
+        recipes.isEmpty() -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = "LOADING",
+                    text = "Рецептов в этой категории нету",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 25.sp,
                     textAlign = TextAlign.Center
                 )
             }
-        }
-
-        uiState.error != null -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "Рецепты не удалось загрузить",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontSize = 25.sp,
-                    textAlign = TextAlign.Center
-                )
-            }
-        }
-
-        uiState.isEmpty -> {
-            Text(
-                text = "Рецептов в этой категории нету",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
-                fontSize = 25.sp,
-                textAlign = TextAlign.Center
-            )
-
         }
 
         else -> {
@@ -95,11 +74,11 @@ fun RecipesScreen(
                     contentPadding = PaddingValues(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    items(uiState.recipesList, key = { it.id }) { recipe ->
+                    items(recipes, key = { it.id }) { recipe ->
                         RecipeItem(
                             recipe = recipe,
                             onRecipeClick = {
-                                onRecipeClick(recipe.id, recipe)
+                                onRecipeClick(recipe.id)
                             },
                         )
                     }

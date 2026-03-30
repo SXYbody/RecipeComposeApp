@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import java.net.URLDecoder
 
 class RecipesViewModel(
-    private val savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val categoryId: Int =
         checkNotNull(savedStateHandle["categoryId"])

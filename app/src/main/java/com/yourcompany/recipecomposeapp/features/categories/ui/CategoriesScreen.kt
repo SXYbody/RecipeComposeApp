@@ -25,6 +25,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yourcompany.recipecomposeapp.data.repository.RecipesRepositoryStub
 import com.yourcompany.recipecomposeapp.features.categories.presentation.CategoriesViewModel
 import com.yourcompany.recipecomposeapp.features.categories.presentation.model.toUiModel
+import com.yourcompany.recipecomposeapp.features.core.ui.components.ErrorScreen
+import com.yourcompany.recipecomposeapp.features.core.ui.components.LoadingScreen
 import com.yourcompany.recipecomposeapp.features.core.ui.components.ScreenHeader
 
 @Composable
@@ -36,38 +38,9 @@ fun CategoriesScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     when {
-        uiState.isLoading -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "LOADING",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontSize = 25.sp,
-                    textAlign = TextAlign.Center
-                )
-            }
+        uiState.isLoading -> LoadingScreen()
 
-        }
-
-        uiState.error != null -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "Категории не удалось загрузить",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontSize = 25.sp,
-                    textAlign = TextAlign.Center
-                )
-            }
-        }
+        uiState.error != null -> ErrorScreen("Категории не удалось загрузить")
 
         else -> {
             Column(
