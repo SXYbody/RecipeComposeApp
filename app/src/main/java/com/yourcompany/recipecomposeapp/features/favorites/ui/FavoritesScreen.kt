@@ -19,22 +19,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.yourcompany.recipecomposeapp.data.repository.RecipesRepositoryStub
 import com.yourcompany.recipecomposeapp.features.core.ui.components.ErrorScreen
 import com.yourcompany.recipecomposeapp.features.core.ui.components.LoadingScreen
 import com.yourcompany.recipecomposeapp.features.core.ui.components.ScreenHeader
 import com.yourcompany.recipecomposeapp.features.recipes.ui.RecipeItem
-import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.toUiModel
-import com.yourcompany.recipecomposeapp.features.core.utils.AppDataStoreManager
-import com.yourcompany.recipecomposeapp.features.details.presentation.RecipeDetailsViewModel
 import com.yourcompany.recipecomposeapp.features.favorites.presentation.FavoritesViewModel
 import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
-import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.RecipesUiState
-import kotlinx.coroutines.flow.map
 
 @Composable
 fun FavoriteScreen(

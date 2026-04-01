@@ -38,6 +38,7 @@ import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.Reci
 import com.yourcompany.recipecomposeapp.features.core.utils.AppDataStoreManager
 import com.yourcompany.recipecomposeapp.features.core.utils.shareRecipe
 import com.yourcompany.recipecomposeapp.features.details.presentation.RecipeDetailsViewModel
+import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.IngredientUiModel
 import kotlinx.coroutines.launch
 
 @Composable
@@ -62,10 +63,12 @@ fun RecipeDetailsScreen() {
 
         uiState.error != null -> ErrorScreen("Не удалось загрузить рецепт")
 
+        uiState.recipe == null -> ErrorScreen("Не удалось загрузить рецепт")
+
         else -> {
-            val recipe = uiState.recipe
-            val currentPortions = uiState.currentPortions
-            val scaledIngredients = uiState.scaledIngredients
+            val recipe: RecipeUiModel = uiState.recipe!!
+            val currentPortions: Int = uiState.currentPortions
+            val scaledIngredients: List<IngredientUiModel> = uiState.scaledIngredients!!
             val isFavoriteSave: Boolean = uiState.isFavoriteSave
 
             val portionsText = pluralStringResource(

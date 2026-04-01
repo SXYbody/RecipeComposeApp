@@ -5,17 +5,19 @@ import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.Reci
 import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.toUiModel
 
 data class RecipeDetailsUiState(
-    val recipe: RecipeUiModel,
+    val recipe: RecipeUiModel? = null,
     val isFavoriteSave: Boolean = false,
     val currentPortions: Int = 1,
     val isLoading: Boolean = false,
     val error: String? = null,
 ) {
-    private val multiplier get() = currentPortions.toDouble() / recipe.servings
-    val scaledIngredients: List<IngredientUiModel>
-        get() = recipe.ingredients.map { ingredient ->
-            ingredient.copy(
-                quantity = ingredient.quantity * multiplier
-            ).toUiModel()
+    val scaledIngredients: List<IngredientUiModel>?
+        get() = recipe?.let {
+            val multiplier = currentPortions.toDouble() / recipe.servings
+            it.ingredients.map { ingredient ->
+                ingredient.copy(
+                    quantity = ingredient.quantity * multiplier
+                ).toUiModel()
+            }
         }
 }
