@@ -13,11 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
@@ -30,16 +25,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.yourcompany.recipecomposeapp.R
-import com.yourcompany.recipecomposeapp.features.categories.presentation.CategoriesViewModel
 import com.yourcompany.recipecomposeapp.features.core.ui.components.ErrorScreen
 import com.yourcompany.recipecomposeapp.features.core.ui.components.LoadingScreen
 import com.yourcompany.recipecomposeapp.features.core.ui.components.ScreenHeader
 import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
-import com.yourcompany.recipecomposeapp.features.core.utils.AppDataStoreManager
 import com.yourcompany.recipecomposeapp.features.core.utils.shareRecipe
 import com.yourcompany.recipecomposeapp.features.details.presentation.RecipeDetailsViewModel
 import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.IngredientUiModel
-import kotlinx.coroutines.launch
 
 @Composable
 fun RecipeDetailsScreen() {
@@ -66,9 +58,10 @@ fun RecipeDetailsScreen() {
         uiState.recipe == null -> ErrorScreen("Не удалось загрузить рецепт")
 
         else -> {
-            val recipe: RecipeUiModel = uiState.recipe!!
+            val recipe: RecipeUiModel = requireNotNull(uiState.recipe)
             val currentPortions: Int = uiState.currentPortions
-            val scaledIngredients: List<IngredientUiModel> = uiState.scaledIngredients!!
+            val scaledIngredients: List<IngredientUiModel> =
+                requireNotNull(uiState.scaledIngredients)
             val isFavoriteSave: Boolean = uiState.isFavoriteSave
 
             val portionsText = pluralStringResource(

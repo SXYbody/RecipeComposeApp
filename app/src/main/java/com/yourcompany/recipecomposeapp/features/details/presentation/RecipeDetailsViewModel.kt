@@ -40,23 +40,28 @@ class RecipeDetailsViewModel(
     private fun loadRecipe(recipeId: Int) {
         _uiState.update { it.copy(isLoading = true) }
 
-        val recipe = checkNotNull(RecipesRepositoryStub.getRecipeById(recipeId)).toUiModel()
+        try {
+            val recipe: RecipeUiModel =
+                checkNotNull(RecipesRepositoryStub.getRecipeById(recipeId)).toUiModel()
 
-        _uiState.update { it.copy(recipe = recipe) }
+            _uiState.update { it.copy(recipe = recipe) }
 
-        favoriteDataStoreManager.isFavoriteFlow(recipe.id).onEach { isFavorite ->
-            _uiState.update {
-                it.copy(
-                    isFavoriteSave = isFavorite,
-                    isLoading = false
-                )
-            }
-        }.catch { error ->
-            _uiState.update {
-                it.copy(isLoading = false, error = error.message)
-            }
-        }.launchIn(viewModelScope)
+            favoriteDataStoreManager.isFavoriteFlow(recipe.id).onEach { isFavorite ->
+                _uiState.update {
+                    it.copy(
+                        isFavoriteSave = isFavorite,
+                        isLoading = false
+                    )
+                }
+            }.catch { error ->
+                _uiState.update {
+                    it.copy(isLoading = false, error = error.message)
+                }
+            }.launchIn(viewModelScope)
 
+        } catch (e: Exception) {
+            _uiState.update { it.copy(isLoading = false, error = "Рецепт не найден") }
+        }
     }
 
     fun updatePortions(portions: Int) {
