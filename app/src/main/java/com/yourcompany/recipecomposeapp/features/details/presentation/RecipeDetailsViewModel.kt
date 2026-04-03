@@ -22,29 +22,46 @@ class RecipeDetailsViewModel(
     savedStateHandle: SavedStateHandle,
 ) : AndroidViewModel(application = application) {
     private val recipeId: Int = checkNotNull(savedStateHandle["recipeId"])
-    private val recipe: RecipeUiModel = checkNotNull(
-        RecipesRepositoryStub.getRecipeById(recipeId)?.toUiModel()
-    )
+
+    //    private val recipe: RecipeUiModel = checkNotNull(
+//        RecipesRepositoryStub.getRecipeById(recipeId)?.toUiModel()
+//    )
     private val favoriteDataStoreManager = AppDataStoreManager(application.applicationContext)
 
-    private val _uiState = MutableStateFlow(RecipeDetailsUiState(recipe))
+    private val _uiState = MutableStateFlow(RecipeDetailsUiState())
     val uiState = _uiState.asStateFlow()
 
     init {
+        viewModelScope.launch {
+            loadRecipe(recipeId)
+        }
+    }
+
+    private fun loadRecipe(recipeId: Int) {
         _uiState.update { it.copy(isLoading = true) }
 
-        favoriteDataStoreManager.isFavoriteFlow(recipe.id).onEach { isFavorite ->
-            _uiState.update {
-                it.copy(
-                    isFavoriteSave = isFavorite,
-                    isLoading = false
-                )
-            }
-        }.catch { error ->
-            _uiState.update {
-                it.copy(isLoading = false, error = error.message)
-            }
-        }.launchIn(viewModelScope)
+        try {
+            val recipe: RecipeUiModel =
+                checkNotNull(RecipesRepositoryStub.getRecipeById(recipeId)).toUiModel()
+
+            _uiState.update { it.copy(recipe = recipe) }
+
+            favoriteDataStoreManager.isFavoriteFlow(recipe.id).onEach { isFavorite ->
+                _uiState.update {
+                    it.copy(
+                        isFavoriteSave = isFavorite,
+                        isLoading = false
+                    )
+                }
+            }.catch { error ->
+                _uiState.update {
+                    it.copy(isLoading = false, error = error.message)
+                }
+            }.launchIn(viewModelScope)
+
+        } catch (e: Exception) {
+            _uiState.update { it.copy(isLoading = false, error = "Рецепт не найден") }
+        }
     }
 
     fun updatePortions(portions: Int) {
@@ -57,11 +74,13 @@ class RecipeDetailsViewModel(
 
     fun toggleFavorite() {
         viewModelScope.launch {
-            if (favoriteDataStoreManager.isFavorite(recipe.id)) {
-                favoriteDataStoreManager.removeFavorite(
-                    recipe.id
-                )
-            } else favoriteDataStoreManager.addFavorite(recipe.id)
+            _uiState.value.recipe?.id?.let {
+                if (favoriteDataStoreManager.isFavorite(it)) {
+                    favoriteDataStoreManager.removeFavorite(
+                        it
+                    )
+                } else favoriteDataStoreManager.addFavorite(it)
+            }
         }
     }
 }
