@@ -58,6 +58,8 @@ class MainActivity : ComponentActivity() {
                     val categories = Json.decodeFromString<List<CategoryDto>>(response)
                     Log.e("", "${categories.size} ${categories.map { it.title }}")
                 }
+            } catch (e: Exception) {
+                Log.e("", "Ошибка", e)
             } finally {
                 connect.disconnect()
             }
@@ -72,6 +74,7 @@ class MainActivity : ComponentActivity() {
         setIntent(intent)
     }
 }
+
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
