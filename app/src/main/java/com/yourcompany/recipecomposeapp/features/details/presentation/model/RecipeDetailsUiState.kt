@@ -16,7 +16,7 @@ data class RecipeDetailsUiState(
             val multiplier = currentPortions.toDouble() / recipe.servings
             it.ingredients.map { ingredient ->
                 ingredient.copy(
-                    quantity = ingredient.quantity * multiplier
+                    quantity = (ingredient.quantity.toDouble() * multiplier).toString()
                 ).toUiModel()
             }
         }

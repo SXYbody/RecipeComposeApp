@@ -15,6 +15,6 @@ data class IngredientUiModel(
 
 fun IngredientDto.toUiModel() = IngredientUiModel(
     description = description,
-    quantity = quantity.toString(),
+    quantity = quantity,
     unitOfMeasure = unitOfMeasure,
 )
