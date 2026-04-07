@@ -14,13 +14,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.yourcompany.recipecomposeapp.data.model.CategoryDto
+import com.yourcompany.recipecomposeapp.data.model.RecipeDto
 import com.yourcompany.recipecomposeapp.theme.RecipeComposeAppTheme
 import kotlinx.serialization.json.Json
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 class MainActivity : ComponentActivity() {
     private var deepLinkIntent by mutableStateOf<Intent?>(null)
+    private val threadPool: ExecutorService = Executors.newFixedThreadPool(10)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,14 +40,17 @@ class MainActivity : ComponentActivity() {
             )
         }
 
-        Log.e("", "Метод onCreate() выполняется на потоке: ${Thread.currentThread().name}")
+        Log.e("Pool", "Метод onCreate() выполняется на потоке: ${Thread.currentThread().name}")
 
-        Thread {
-            Log.e("", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
+        threadPool.execute {
+            Log.e("Pool", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
+
             val url = URL("https://recipes.androidsprint.ru/api/category")
-            val connect = url.openConnection() as HttpURLConnection
-
+            var connect: HttpURLConnection? = null
             try {
+                connect = url.openConnection() as HttpURLConnection
+
+
                 connect.requestMethod = "GET"
                 connect.connect()
 
@@ -53,17 +60,55 @@ class MainActivity : ComponentActivity() {
                     val response = connect.inputStream
                         .bufferedReader()
                         .readText()
-                    Log.e("", response)
+                    Log.e("Pool", response)
 
                     val categories = Json.decodeFromString<List<CategoryDto>>(response)
-                    Log.e("", "${categories.size} ${categories.map { it.title }}")
+
+                    categories.forEach { category ->
+                        threadPool.execute {
+                            var connect: HttpURLConnection? = null
+                            try {
+                                val urlCategory =
+                                    URL("https://recipes.androidsprint.ru/api/category/${category.id}/recipes")
+                                connect = urlCategory.openConnection() as HttpURLConnection
+
+                                connect.requestMethod = "GET"
+                                connect.connect()
+
+                                val responseCode = connect.responseCode
+
+                                if (responseCode == HttpURLConnection.HTTP_OK) {
+                                    val response = connect.inputStream
+                                        .bufferedReader()
+                                        .readText()
+                                    val recipes = Json.decodeFromString<List<RecipeDto>>(response)
+                                    Log.e(
+                                        "Pool",
+                                        "Имя потока: ${Thread.currentThread().name}, " +
+                                                "Категория: ${category.title}, Кол-во рецептов: ${recipes.size}"
+                                    )
+                                }
+
+                            } catch (e: Exception) {
+                                Log.e("Pool", "Ошибка: ${e::class.simpleName}: ${e.message}")
+                            } finally {
+                                connect?.disconnect()
+                            }
+                        }
+                    }
                 }
+
             } catch (e: Exception) {
-                Log.e("", "Ошибка", e)
+                Log.e("Pool", "Ошибка: ${e::class.simpleName}: ${e.message}")
             } finally {
-                connect.disconnect()
+                connect?.disconnect()
             }
-        }.start()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        threadPool.shutdown()
     }
 
     override fun onNewIntent(intent: Intent) {
