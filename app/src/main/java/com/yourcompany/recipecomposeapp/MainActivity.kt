@@ -13,12 +13,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.lifecycleScope
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.yourcompany.recipecomposeapp.data.model.CategoryDto
-import com.yourcompany.recipecomposeapp.data.model.RecipeDto
+import com.yourcompany.recipecomposeapp.features.core.network.NetworkConfig
+import com.yourcompany.recipecomposeapp.features.core.network.api.RecipesApiService
 import com.yourcompany.recipecomposeapp.theme.RecipeComposeAppTheme
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import java.net.HttpURLConnection
-import java.net.URL
+import okhttp3.MediaType.Companion.toMediaType
+import org.json.JSONObject
+import retrofit2.Retrofit
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -42,67 +47,19 @@ class MainActivity : ComponentActivity() {
 
         Log.e("Pool", "Метод onCreate() выполняется на потоке: ${Thread.currentThread().name}")
 
-        threadPool.execute {
-            Log.e("Pool", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
+        val contentType = "application/json".toMediaType()
+        val json = Json { ignoreUnknownKeys = true; coerceInputValues = true }
 
-            val url = URL("https://recipes.androidsprint.ru/api/category")
-            var connect: HttpURLConnection? = null
-            try {
-                connect = url.openConnection() as HttpURLConnection
+        val retrofit = Retrofit.Builder()
+            .baseUrl(NetworkConfig.BASE_URL)
+            .addConverterFactory(json.asConverterFactory(contentType))
+            .build()
 
+        val apiService = retrofit.create(RecipesApiService::class.java)
 
-                connect.requestMethod = "GET"
-                connect.connect()
-
-                val responseCode = connect.responseCode
-
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    val response = connect.inputStream
-                        .bufferedReader()
-                        .readText()
-                    Log.e("Pool", response)
-
-                    val categories = Json.decodeFromString<List<CategoryDto>>(response)
-
-                    categories.forEach { category ->
-                        threadPool.execute {
-                            var connect: HttpURLConnection? = null
-                            try {
-                                val urlCategory =
-                                    URL("https://recipes.androidsprint.ru/api/category/${category.id}/recipes")
-                                connect = urlCategory.openConnection() as HttpURLConnection
-
-                                connect.requestMethod = "GET"
-                                connect.connect()
-
-                                val responseCode = connect.responseCode
-
-                                if (responseCode == HttpURLConnection.HTTP_OK) {
-                                    val response = connect.inputStream
-                                        .bufferedReader()
-                                        .readText()
-                                    val recipes = Json.decodeFromString<List<RecipeDto>>(response)
-                                    Log.e(
-                                        "Pool",
-                                        "Имя потока: ${Thread.currentThread().name}, " +
-                                                "Категория: ${category.title}, Кол-во рецептов: ${recipes.size}"
-                                    )
-                                }
-
-                            } catch (e: Exception) {
-                                Log.e("Pool", "Ошибка: ${e::class.simpleName}: ${e.message}")
-                            } finally {
-                                connect?.disconnect()
-                            }
-                        }
-                    }
-                }
-
-            } catch (e: Exception) {
-                Log.e("Pool", "Ошибка: ${e::class.simpleName}: ${e.message}")
-            } finally {
-                connect?.disconnect()
-            }
+        lifecycleScope.launch {
+            val categories: List<CategoryDto> = apiService.getCategories()
+            Log.e("Pool", categories.joinToString())
         }
     }
 
