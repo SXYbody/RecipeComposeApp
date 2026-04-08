@@ -79,64 +79,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-//
-//        threadPool.execute {
-//            Log.e("Pool", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
-//
-//            val url = URL("https://recipes.androidsprint.ru/api/category")
-//            var connect: HttpURLConnection? = null
-//            try {
-//                connect = url.openConnection() as HttpURLConnection
-//
-//
-//                connect.requestMethod = "GET"
-//                connect.connect()
-//
-//                val response = connect.inputStream
-//                    .bufferedReader()
-//                    .readText()
-//                Log.e("Pool", response)
-//
-//                val categories = Json.decodeFromString<List<CategoryDto>>(response)
-//
-//                categories.forEach { category ->
-//                    threadPool.execute {
-//                        var connect: HttpURLConnection? = null
-//                        try {
-//                            val urlCategory =
-//                                URL("https://recipes.androidsprint.ru/api/category/${category.id}/recipes")
-//                            connect = urlCategory.openConnection() as HttpURLConnection
-//
-//                            connect.requestMethod = "GET"
-//                            connect.connect()
-//
-//                            val responseCode = connect.responseCode
-//
-//                            if (responseCode == HttpURLConnection.HTTP_OK) {
-//                                val response = connect.inputStream
-//                                    .bufferedReader()
-//                                    .readText()
-//                                val recipes = Json.decodeFromString<List<RecipeDto>>(response)
-//                                Log.e(
-//                                    "Pool",
-//                                    "Имя потока: ${Thread.currentThread().name}, " +
-//                                            "Категория: ${category.title}, Кол-во рецептов: ${recipes.size}"
-//                                )
-//                            }
-//
-//                        } catch (e: Exception) {
-//                            Log.e("Pool", "Ошибка: ${e::class.simpleName}: ${e.message}")
-//                        } finally {
-//                            connect?.disconnect()
-//                        }
-//                    }
-//                }
-//            } catch (e: Exception) {
-//                Log.e("Pool", "Ошибка: ${e::class.simpleName}: ${e.message}")
-//            } finally {
-//                connect?.disconnect()
-//            }
-//        }
     }
     @Composable
     fun Greeting(name: String, modifier: Modifier = Modifier) {
