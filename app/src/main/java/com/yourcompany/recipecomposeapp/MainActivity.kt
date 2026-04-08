@@ -1,5 +1,6 @@
 package com.yourcompany.recipecomposeapp
 
+import android.app.DownloadManager
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -26,10 +27,12 @@ import org.json.JSONObject
 import retrofit2.Retrofit
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import kotlin.concurrent.thread
 
 class MainActivity : ComponentActivity() {
     private var deepLinkIntent by mutableStateOf<Intent?>(null)
     private val threadPool: ExecutorService = Executors.newFixedThreadPool(10)
+    private val okHttpClient = OkHttpClient()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,33 +65,19 @@ class MainActivity : ComponentActivity() {
             Log.e("Pool", categories.joinToString())
         }
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        threadPool.shutdown()
+    @Composable
+    fun Greeting(name: String, modifier: Modifier = Modifier) {
+        Text(
+            text = "Hello $name!",
+            modifier = modifier
+        )
     }
 
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        intent.data?.let { _ ->
-            deepLinkIntent = intent
+    @Preview(showBackground = true)
+    @Composable
+    fun GreetingPreview() {
+        RecipeComposeAppTheme {
+            Greeting("Android")
         }
-        setIntent(intent)
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    RecipeComposeAppTheme {
-        Greeting("Android")
     }
 }
