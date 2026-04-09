@@ -14,15 +14,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.lifecycleScope
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.yourcompany.recipecomposeapp.data.model.CategoryDto
-import com.yourcompany.recipecomposeapp.data.model.RecipeDto
+import com.yourcompany.recipecomposeapp.features.core.network.NetworkConfig
+import com.yourcompany.recipecomposeapp.features.core.network.api.RecipesApiService
 import com.yourcompany.recipecomposeapp.theme.RecipeComposeAppTheme
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.ResponseBody
-import java.net.HttpURLConnection
-import java.net.URL
+import okhttp3.MediaType.Companion.toMediaType
+import org.json.JSONObject
+import retrofit2.Retrofit
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import kotlin.concurrent.thread
@@ -48,36 +50,19 @@ class MainActivity : ComponentActivity() {
 
         Log.e("Pool", "Метод onCreate() выполняется на потоке: ${Thread.currentThread().name}")
 
-        thread {
-            val request = Request.Builder()
-                .url("https://recipes.androidsprint.ru/api/category")
-                .build()
+        val contentType = "application/json".toMediaType()
+        val json = Json { ignoreUnknownKeys = true; coerceInputValues = true }
 
-            okHttpClient.newCall(request).execute().use { response ->
-                val body = response.body.string()
-                Log.e("Pool", body)
-                val categories: List<CategoryDto> = Json.decodeFromString<List<CategoryDto>>(body)
+        val retrofit = Retrofit.Builder()
+            .baseUrl(NetworkConfig.BASE_URL)
+            .addConverterFactory(json.asConverterFactory(contentType))
+            .build()
 
-                categories.forEach { category ->
-                    threadPool.execute {
-                        val request = Request.Builder()
-                            .url("https://recipes.androidsprint.ru/api/category/${category.id}/recipes")
-                            .build()
+        val apiService = retrofit.create(RecipesApiService::class.java)
 
-                        okHttpClient.newCall(request).execute().use { response ->
-                            val body = response.body.string()
-                            val recipes = Json.decodeFromString<List<RecipeDto>>(body)
-
-                            Log.e(
-                                "Pool",
-                                "Имя потока: ${Thread.currentThread().name}, " +
-                                        "Категория: ${category.title}, Кол-во рецептов: ${recipes.size}"
-                            )
-
-                        }
-                    }
-                }
-            }
+        lifecycleScope.launch {
+            val categories: List<CategoryDto> = apiService.getCategories()
+            Log.e("Pool", categories.joinToString())
         }
     }
     @Composable
