@@ -3,6 +3,7 @@ package com.yourcompany.recipecomposeapp.features.recipes.presentation
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yourcompany.recipecomposeapp.data.repository.RecipesRepository
 import com.yourcompany.recipecomposeapp.data.repository.RecipesRepositoryStub
 import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.RecipesUiState
 import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.toUiModel
@@ -14,7 +15,8 @@ import kotlinx.coroutines.launch
 import java.net.URLDecoder
 
 class RecipesViewModel(
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    private val repository: RecipesRepository
 ) : ViewModel() {
     private val categoryId: Int =
         checkNotNull(savedStateHandle["categoryId"])
@@ -29,6 +31,10 @@ class RecipesViewModel(
     val uiState: StateFlow<RecipesUiState> = _uiState.asStateFlow()
 
     init {
+        loadRecipes()
+    }
+
+    fun loadRecipes() {
         viewModelScope.launch {
             _uiState.update { currentState -> currentState.copy(isLoading = true) }
             try {
@@ -37,7 +43,7 @@ class RecipesViewModel(
                     it.copy(
                         categoryTitle = categoryTitle,
                         categoryImageUrl = categoryImageUrl,
-                        recipesList = RecipesRepositoryStub.getRecipesByCategoryId(categoryId)
+                        recipesList = repository.getRecipesByCategory(categoryId)
                             .map { it.toUiModel() },
                         isLoading = false,
                     )

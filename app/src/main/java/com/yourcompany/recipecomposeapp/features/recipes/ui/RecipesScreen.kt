@@ -27,7 +27,7 @@ import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.Reci
 
 @Composable
 fun RecipesScreen(
-    viewModel: RecipesViewModel = viewModel(),
+    viewModel: RecipesViewModel,
     modifier: Modifier = Modifier,
     onRecipeClick: (Int) -> Unit,
 ) {

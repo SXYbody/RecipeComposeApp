@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.yourcompany.recipecomposeapp.data.repository.RecipesRepository
 import com.yourcompany.recipecomposeapp.data.repository.RecipesRepositoryStub
 import com.yourcompany.recipecomposeapp.features.core.utils.AppDataStoreManager
 import com.yourcompany.recipecomposeapp.features.details.presentation.model.RecipeDetailsUiState
@@ -20,6 +21,7 @@ import kotlinx.coroutines.launch
 class RecipeDetailsViewModel(
     application: Application,
     savedStateHandle: SavedStateHandle,
+    private val repository: RecipesRepository,
 ) : AndroidViewModel(application = application) {
     private val recipeId: Int = checkNotNull(savedStateHandle["recipeId"])
 
@@ -32,35 +34,34 @@ class RecipeDetailsViewModel(
     val uiState = _uiState.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            loadRecipe(recipeId)
-        }
+        loadRecipe(recipeId)
     }
 
     private fun loadRecipe(recipeId: Int) {
-        _uiState.update { it.copy(isLoading = true) }
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
 
-        try {
-            val recipe: RecipeUiModel =
-                checkNotNull(RecipesRepositoryStub.getRecipeById(recipeId)).toUiModel()
+            try {
+                val recipe: RecipeUiModel = repository.getRecipe(recipeId).toUiModel()
 
-            _uiState.update { it.copy(recipe = recipe) }
+                _uiState.update { it.copy(recipe = recipe) }
 
-            favoriteDataStoreManager.isFavoriteFlow(recipe.id).onEach { isFavorite ->
-                _uiState.update {
-                    it.copy(
-                        isFavoriteSave = isFavorite,
-                        isLoading = false
-                    )
-                }
-            }.catch { error ->
-                _uiState.update {
-                    it.copy(isLoading = false, error = error.message)
-                }
-            }.launchIn(viewModelScope)
+                favoriteDataStoreManager.isFavoriteFlow(recipe.id).onEach { isFavorite ->
+                    _uiState.update {
+                        it.copy(
+                            isFavoriteSave = isFavorite,
+                            isLoading = false
+                        )
+                    }
+                }.catch { error ->
+                    _uiState.update {
+                        it.copy(isLoading = false, error = error.message)
+                    }
+                }.launchIn(viewModelScope)
 
-        } catch (e: Exception) {
-            _uiState.update { it.copy(isLoading = false, error = "Рецепт не найден") }
+            } catch (e: Exception) {
+                _uiState.update { it.copy(isLoading = false, error = "Рецепт не найден") }
+            }
         }
     }
 

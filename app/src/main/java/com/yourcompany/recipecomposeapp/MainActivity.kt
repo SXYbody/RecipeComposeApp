@@ -23,6 +23,7 @@ import com.yourcompany.recipecomposeapp.theme.RecipeComposeAppTheme
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
 import org.json.JSONObject
 import retrofit2.Retrofit
 import java.util.concurrent.ExecutorService
@@ -42,12 +43,6 @@ class MainActivity : ComponentActivity() {
             deepLinkIntent = intent
         }
 
-        setContent {
-            RecipesApp(
-                intent = deepLinkIntent
-            )
-        }
-
         Log.e("Pool", "Метод onCreate() выполняется на потоке: ${Thread.currentThread().name}")
 
         val contentType = "application/json".toMediaType()
@@ -64,7 +59,15 @@ class MainActivity : ComponentActivity() {
             val categories: List<CategoryDto> = apiService.getCategories()
             Log.e("Pool", categories.joinToString())
         }
+
+        setContent {
+            RecipesApp(
+                intent = deepLinkIntent,
+                apiService = apiService,
+            )
+        }
     }
+
     @Composable
     fun Greeting(name: String, modifier: Modifier = Modifier) {
         Text(

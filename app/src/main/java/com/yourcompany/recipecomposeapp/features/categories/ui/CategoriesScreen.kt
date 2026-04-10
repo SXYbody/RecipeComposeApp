@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -22,6 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.yourcompany.recipecomposeapp.data.repository.RecipesRepository
 import com.yourcompany.recipecomposeapp.data.repository.RecipesRepositoryStub
 import com.yourcompany.recipecomposeapp.features.categories.presentation.CategoriesViewModel
 import com.yourcompany.recipecomposeapp.features.categories.presentation.model.toUiModel
@@ -33,8 +35,9 @@ import com.yourcompany.recipecomposeapp.features.core.ui.components.ScreenHeader
 fun CategoriesScreen(
     modifier: Modifier = Modifier,
     onClickCategory: (Int, String, String) -> Unit,
+    repository: RecipesRepository
 ) {
-    val viewModel: CategoriesViewModel = viewModel()
+    val viewModel = remember { CategoriesViewModel(recipeRepository = repository) }
     val uiState by viewModel.uiState.collectAsState()
 
     when {
