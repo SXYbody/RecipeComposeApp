@@ -144,14 +144,16 @@ fun RecipesApp(
                         val savedStateHandle = SavedStateHandle(
                             mapOf("recipeId" to backStackEntry.arguments?.getInt("recipeId"))
                         )
-                        val viewModel = remember(backStackEntry) {
-                            RecipeDetailsViewModel(
-                                application = context.applicationContext as Application,
-                                savedStateHandle = savedStateHandle,
-                                repository = repositoryImpl,
-                            )
+                        val viewModel: RecipeDetailsViewModel? = remember(backStackEntry) {
+                            (context.applicationContext as? Application)?.let {
+                                RecipeDetailsViewModel(
+                                    application = it,
+                                    savedStateHandle = savedStateHandle,
+                                    repository = repositoryImpl,
+                                )
+                            }
                         }
-                        RecipeDetailsScreen(viewModel = viewModel)
+                        viewModel?.let { RecipeDetailsScreen(viewModel = it) }
                     }
                 }
             },
