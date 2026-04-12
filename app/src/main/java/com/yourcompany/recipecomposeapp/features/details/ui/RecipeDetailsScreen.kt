@@ -25,6 +25,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.yourcompany.recipecomposeapp.R
+import com.yourcompany.recipecomposeapp.data.repository.RecipesRepository
 import com.yourcompany.recipecomposeapp.features.core.ui.components.ErrorScreen
 import com.yourcompany.recipecomposeapp.features.core.ui.components.LoadingScreen
 import com.yourcompany.recipecomposeapp.features.core.ui.components.ScreenHeader
@@ -34,20 +35,9 @@ import com.yourcompany.recipecomposeapp.features.details.presentation.RecipeDeta
 import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.IngredientUiModel
 
 @Composable
-fun RecipeDetailsScreen() {
-
-    val viewModel: RecipeDetailsViewModel = viewModel(
-        factory = viewModelFactory {
-            initializer {
-                val application = checkNotNull(this[APPLICATION_KEY])
-                val savedStateHandle = createSavedStateHandle()
-                RecipeDetailsViewModel(
-                    application = application,
-                    savedStateHandle = savedStateHandle,
-                )
-            }
-        }
-    )
+fun RecipeDetailsScreen(
+    viewModel: RecipeDetailsViewModel
+) {
     val uiState by viewModel.uiState.collectAsState()
 
     when {
