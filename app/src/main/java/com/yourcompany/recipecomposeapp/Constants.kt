@@ -1,12 +1,13 @@
 package com.yourcompany.recipecomposeapp
 
 object Constants {
-    const val ASSETS_URI_PREFIX = "file:///android_asset/"
     const val KEY_RECIPE_OBJECT = "recipe"
 
     const val CATEGORY_ID = "categoryId"
     const val CATEGORY_TITLE = "categoryTitle"
     const val CATEGORY_IMAGE_URL = "categoryImageUrl"
+
+    const val IMAGES_BASE_URL = "https://recipes.androidsprint.ru/api/images/"
 
     object Routes {
         const val PARAM_RECIPE_ID = "recipeId"
