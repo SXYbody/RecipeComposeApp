@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.yourcompany.recipecomposeapp.R
+import com.yourcompany.recipecomposeapp.features.core.ui.TitleImage
 import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 
 @Composable
@@ -35,16 +36,11 @@ fun RecipeItem(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column {
-            AsyncImage(
-                model = recipe.imageUrl,
-                placeholder = painterResource(R.drawable.ic_launcher_background),
-                error = painterResource(R.drawable.ic_launcher_foreground),
+            TitleImage(
+                imageUrl = recipe.imageUrl,
                 contentDescription = recipe.title,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
-                    .aspectRatio(2.5f)
+                modifier = Modifier,
+                contentScale = ContentScale.Crop
             )
             Text(
                 text = recipe.title.uppercase(),
