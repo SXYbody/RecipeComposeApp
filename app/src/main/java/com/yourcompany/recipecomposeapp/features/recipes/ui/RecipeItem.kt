@@ -38,7 +38,7 @@ fun RecipeItem(
         Column {
             TitleImage(
                 imageUrl = recipe.imageUrl,
-                contentDescription = "",
+                contentDescription = recipe.title,
                 modifier = Modifier,
                 contentScale = ContentScale.Crop
             )
