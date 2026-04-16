@@ -14,7 +14,7 @@ import com.yourcompany.recipecomposeapp.data.database.entity.CategoryEntity
 
 )
 abstract class RecipesDatabase : RoomDatabase() {
-    abstract fun recipeDao(): CategoryDao
+    abstract fun categoryDao(): CategoryDao
 
     companion object {
         fun buildDataBase(context: Context): RecipesDatabase {
