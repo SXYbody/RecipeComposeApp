@@ -30,29 +30,20 @@ class RecipesViewModel(
     val uiState: StateFlow<RecipesUiState> = _uiState.asStateFlow()
 
     init {
-        loadRecipes()
+        loadRecipes(categoryId)
     }
 
-    fun loadRecipes() {
+    fun loadRecipes(categoryId: Int) {
         viewModelScope.launch {
             _uiState.update { currentState -> currentState.copy(isLoading = true) }
-            try {
-
-                _uiState.update {
-                    it.copy(
+            repository.getRecipesByCategory(categoryId).collect { dto ->
+                val recipesList = dto.map { it.toUiModel() }
+                _uiState.update { currentState ->
+                    currentState.copy(
                         categoryTitle = categoryTitle,
                         categoryImageUrl = categoryImageUrl,
-                        recipesList = repository.getRecipesByCategory(categoryId)
-                            .map { it.toUiModel() },
+                        recipesList = recipesList,
                         isLoading = false,
-                    )
-                }
-
-            } catch (e: Exception) {
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        error = e.message ?: "Произошла неизвестная ошибка"
                     )
                 }
             }

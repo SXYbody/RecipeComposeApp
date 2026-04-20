@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.os.BuildCompat
 import androidx.lifecycle.lifecycleScope
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import com.yourcompany.recipecomposeapp.data.database.RecipesDatabase
 import com.yourcompany.recipecomposeapp.data.model.CategoryDto
 import com.yourcompany.recipecomposeapp.features.core.network.NetworkConfig
 import com.yourcompany.recipecomposeapp.features.core.network.api.RecipesApiService

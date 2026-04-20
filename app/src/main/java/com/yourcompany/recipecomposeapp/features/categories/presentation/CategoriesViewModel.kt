@@ -8,6 +8,7 @@ import com.yourcompany.recipecomposeapp.features.categories.presentation.model.t
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -25,24 +26,15 @@ class CategoriesViewModel(
     fun loadCategories() {
         viewModelScope.launch {
             _uiState.update { currentState -> currentState.copy(isLoading = true) }
-            try {
-                val categoriesList = recipeRepository.getCategories().map { it.toUiModel() }
-                _uiState.update {
-                    it.copy(
+            recipeRepository.getCategories().collect {
+                val categoriesList = it.map { recipe -> recipe.toUiModel() }
+                _uiState.update { uiState ->
+                    uiState.copy(
                         categories = categoriesList,
                         isLoading = false
                     )
                 }
-
-            } catch (e: Exception) {
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        error = e.message
-                    )
-                }
             }
         }
-
     }
- }
+}

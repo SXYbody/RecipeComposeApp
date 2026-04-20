@@ -23,6 +23,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.yourcompany.recipecomposeapp.data.database.RecipesDatabase
 import com.yourcompany.recipecomposeapp.data.repository.RecipesRepositoryImpl
 import com.yourcompany.recipecomposeapp.data.repository.RecipesRepositoryStub
 import com.yourcompany.recipecomposeapp.features.categories.ui.CategoriesScreen
@@ -43,13 +44,14 @@ import kotlinx.coroutines.delay
 @Composable
 fun RecipesApp(
     intent: Intent? = null,
-    apiService: RecipesApiService
+    apiService: RecipesApiService,
 ) {
     RecipeComposeAppTheme() {
         val context = LocalContext.current
         val navController = rememberNavController()
         val appData = remember { AppDataStoreManager(context) }
-        val repositoryImpl = remember { RecipesRepositoryImpl(apiService) }
+        val database = remember { RecipesDatabase.getDatabase(context) }
+        val repositoryImpl = remember { RecipesRepositoryImpl(apiService, database) }
 
         AppNavHost(navController = navController, deepLinkIntent = intent)
 
