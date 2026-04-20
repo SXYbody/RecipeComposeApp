@@ -50,7 +50,7 @@ fun RecipesApp(
         val context = LocalContext.current
         val navController = rememberNavController()
         val appData = remember { AppDataStoreManager(context) }
-        val database = RecipesDatabase.getDatabase(context)
+        val database = remember { RecipesDatabase.getDatabase(context) }
         val repositoryImpl = remember { RecipesRepositoryImpl(apiService, database) }
 
         AppNavHost(navController = navController, deepLinkIntent = intent)

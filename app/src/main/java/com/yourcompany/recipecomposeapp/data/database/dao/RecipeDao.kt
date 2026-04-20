@@ -27,10 +27,3 @@ interface RecipeDao {
     @Query("SELECT * FROM recipes WHERE id IN (:recipesIds)")
     fun getRecipesByIds(recipesIds: List<Int>): Flow<List<RecipeEntity>>
 }
-
-fun CategoryEntity.toDto() = CategoryDto(
-    id = id,
-    title = name,
-    description = description,
-    imageUrl = imageUrl,
-)
