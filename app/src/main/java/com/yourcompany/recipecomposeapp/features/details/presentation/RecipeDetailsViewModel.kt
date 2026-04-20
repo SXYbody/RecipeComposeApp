@@ -13,6 +13,7 @@ import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.toUi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -34,33 +35,28 @@ class RecipeDetailsViewModel(
     val uiState = _uiState.asStateFlow()
 
     init {
-        loadRecipe(recipeId)
-    }
-
-    private fun loadRecipe(recipeId: Int) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
+            repository.getRecipe(recipeId).collect { recipeDto ->
+                if (recipeDto != null) {
+                    val recipe: RecipeUiModel = recipeDto.toUiModel()
+                    _uiState.update { it.copy(recipe = recipe) }
 
-            try {
-                val recipe: RecipeUiModel = repository.getRecipe(recipeId).toUiModel()
-
-                _uiState.update { it.copy(recipe = recipe) }
-
-                favoriteDataStoreManager.isFavoriteFlow(recipe.id).onEach { isFavorite ->
-                    _uiState.update {
-                        it.copy(
-                            isFavoriteSave = isFavorite,
-                            isLoading = false
-                        )
-                    }
-                }.catch { error ->
-                    _uiState.update {
-                        it.copy(isLoading = false, error = error.message)
-                    }
-                }.launchIn(viewModelScope)
-
-            } catch (e: Exception) {
-                _uiState.update { it.copy(isLoading = false, error = "Рецепт не найден") }
+                    favoriteDataStoreManager.isFavoriteFlow(recipe.id).onEach { isFavorite ->
+                        _uiState.update {
+                            it.copy(
+                                isFavoriteSave = isFavorite,
+                                isLoading = false
+                            )
+                        }
+                    }.catch { error ->
+                        _uiState.update {
+                            it.copy(isLoading = false, error = error.message)
+                        }
+                    }.launchIn(viewModelScope)
+                } else {
+                    _uiState.update { it.copy(isLoading = true) }
+                }
             }
         }
     }
