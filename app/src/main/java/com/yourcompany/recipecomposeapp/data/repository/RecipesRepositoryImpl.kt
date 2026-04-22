@@ -48,14 +48,14 @@ class RecipesRepositoryImpl(
         return recipeDao.getRecipesByCategoryId(categoryId).map { entities -> entities.map { it.toDto() } }
     }
 
-    override suspend fun getRecipe(recipeId: Int): RecipeDto {
-        return withContext(Dispatchers.IO) {
+    override fun getRecipe(recipeId: Int): Flow<RecipeDto?> {
+        CoroutineScope(Dispatchers.IO).launch {
             try {
                 recipesApiService.getRecipeById(recipeId)
             } catch (e: Exception) {
                 Log.e("RecipesRepository", "Ошибка загрузки рецепта", e)
-                throw e
             }
         }
+        return recipeDao.getRecipeById(recipeId).map { it?.toDto() }
     }
 }
