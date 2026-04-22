@@ -8,14 +8,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -25,20 +21,17 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.yourcompany.recipecomposeapp.data.database.RecipesDatabase
 import com.yourcompany.recipecomposeapp.data.repository.RecipesRepositoryImpl
-import com.yourcompany.recipecomposeapp.data.repository.RecipesRepositoryStub
 import com.yourcompany.recipecomposeapp.features.categories.ui.CategoriesScreen
 import com.yourcompany.recipecomposeapp.features.core.network.api.RecipesApiService
-import com.yourcompany.recipecomposeapp.features.details.ui.RecipeDetailsScreen
-import com.yourcompany.recipecomposeapp.features.favorites.ui.FavoriteScreen
 import com.yourcompany.recipecomposeapp.features.core.ui.navigation.BottomNavigation
 import com.yourcompany.recipecomposeapp.features.core.ui.navigation.Destination
-import com.yourcompany.recipecomposeapp.features.recipes.ui.RecipesScreen
-import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
-import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.toUiModel
-import com.yourcompany.recipecomposeapp.theme.RecipeComposeAppTheme
 import com.yourcompany.recipecomposeapp.features.core.utils.AppDataStoreManager
 import com.yourcompany.recipecomposeapp.features.details.presentation.RecipeDetailsViewModel
+import com.yourcompany.recipecomposeapp.features.details.ui.RecipeDetailsScreen
+import com.yourcompany.recipecomposeapp.features.favorites.ui.FavoriteScreen
 import com.yourcompany.recipecomposeapp.features.recipes.presentation.RecipesViewModel
+import com.yourcompany.recipecomposeapp.features.recipes.ui.RecipesScreen
+import com.yourcompany.recipecomposeapp.theme.RecipeComposeAppTheme
 import kotlinx.coroutines.delay
 
 @Composable

@@ -4,10 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.yourcompany.recipecomposeapp.data.database.entity.CategoryEntity
 import com.yourcompany.recipecomposeapp.data.database.entity.RecipeEntity
-import com.yourcompany.recipecomposeapp.data.model.CategoryDto
-import com.yourcompany.recipecomposeapp.data.model.RecipeDto
 import kotlinx.coroutines.flow.Flow
 
 @Dao

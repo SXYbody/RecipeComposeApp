@@ -19,20 +19,14 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.createSavedStateHandle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.yourcompany.recipecomposeapp.R
-import com.yourcompany.recipecomposeapp.data.repository.RecipesRepository
 import com.yourcompany.recipecomposeapp.features.core.ui.components.ErrorScreen
 import com.yourcompany.recipecomposeapp.features.core.ui.components.LoadingScreen
 import com.yourcompany.recipecomposeapp.features.core.ui.components.ScreenHeader
-import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 import com.yourcompany.recipecomposeapp.features.core.utils.shareRecipe
 import com.yourcompany.recipecomposeapp.features.details.presentation.RecipeDetailsViewModel
 import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.IngredientUiModel
+import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 
 @Composable
 fun RecipeDetailsScreen(

@@ -1,10 +1,7 @@
 package com.yourcompany.recipecomposeapp
 
-import android.app.DownloadManager
 import android.content.Intent
-import android.graphics.Bitmap
 import android.os.Bundle
-import android.util.Config
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -16,10 +13,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.os.BuildCompat
 import androidx.lifecycle.lifecycleScope
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.yourcompany.recipecomposeapp.data.database.RecipesDatabase
 import com.yourcompany.recipecomposeapp.data.model.CategoryDto
 import com.yourcompany.recipecomposeapp.features.core.network.NetworkConfig
 import com.yourcompany.recipecomposeapp.features.core.network.api.RecipesApiService
@@ -29,12 +24,8 @@ import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.json.JSONObject
 import retrofit2.Retrofit
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
-import kotlin.concurrent.thread
 
 class MainActivity : ComponentActivity() {
     private var deepLinkIntent by mutableStateOf<Intent?>(null)

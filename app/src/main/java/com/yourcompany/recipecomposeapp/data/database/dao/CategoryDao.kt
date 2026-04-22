@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.yourcompany.recipecomposeapp.data.database.entity.CategoryEntity
-import com.yourcompany.recipecomposeapp.data.model.CategoryDto
 import kotlinx.coroutines.flow.Flow
 
 @Dao

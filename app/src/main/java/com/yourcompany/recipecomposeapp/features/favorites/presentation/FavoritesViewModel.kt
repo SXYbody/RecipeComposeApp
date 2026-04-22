@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.yourcompany.recipecomposeapp.data.repository.RecipesRepositoryStub
-import com.yourcompany.recipecomposeapp.features.categories.presentation.model.toUiModel
 import com.yourcompany.recipecomposeapp.features.core.utils.AppDataStoreManager
 import com.yourcompany.recipecomposeapp.features.favorites.presentation.model.FavoritesUiState
 import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.toUiModel
@@ -14,7 +13,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 class FavoritesViewModel(
     application: Application,
