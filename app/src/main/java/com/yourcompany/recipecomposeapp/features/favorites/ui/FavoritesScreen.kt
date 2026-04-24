@@ -25,9 +25,9 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.yourcompany.recipecomposeapp.features.core.ui.components.ErrorScreen
 import com.yourcompany.recipecomposeapp.features.core.ui.components.LoadingScreen
 import com.yourcompany.recipecomposeapp.features.core.ui.components.ScreenHeader
-import com.yourcompany.recipecomposeapp.features.recipes.ui.RecipeItem
 import com.yourcompany.recipecomposeapp.features.favorites.presentation.FavoritesViewModel
 import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
+import com.yourcompany.recipecomposeapp.features.recipes.ui.RecipeItem
 
 @Composable
 fun FavoriteScreen(

@@ -3,21 +3,25 @@ package com.yourcompany.recipecomposeapp.features.favorites.presentation
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.yourcompany.recipecomposeapp.data.repository.RecipesRepository
 import com.yourcompany.recipecomposeapp.data.repository.RecipesRepositoryStub
-import com.yourcompany.recipecomposeapp.features.categories.presentation.model.toUiModel
 import com.yourcompany.recipecomposeapp.features.core.utils.AppDataStoreManager
 import com.yourcompany.recipecomposeapp.features.favorites.presentation.model.FavoritesUiState
 import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.toUiModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 class FavoritesViewModel(
     application: Application,
+    private val repository: RecipesRepository,
 ) : AndroidViewModel(application = application) {
 
     private val favoriteDataStoreManager = AppDataStoreManager(application.applicationContext)
@@ -28,9 +32,13 @@ class FavoritesViewModel(
         _uiState.update { currentState -> currentState.copy(isLoading = true) }
         favoriteDataStoreManager.getFavoriteIdsFlow()
             .onEach { ids ->
-                val recipes = ids.mapNotNull {
-                    RecipesRepositoryStub.getRecipeById(it.toInt())?.toUiModel()
-                }
+                val recipes = coroutineScope {
+                    ids.map { id ->
+                        async {
+                            repository.getRecipe(id.toInt()).first()?.toUiModel()
+                        }
+                    }.awaitAll()
+                }.filterNotNull()
                 _uiState.update {
                     it.copy(recipes = recipes, isLoading = false)
                 }
