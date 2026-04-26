@@ -19,17 +19,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.yourcompany.recipecomposeapp.data.database.RecipesDatabase
-import com.yourcompany.recipecomposeapp.data.repository.RecipesRepositoryImpl
+import com.yourcompany.recipecomposeapp.app.di.RecipeApplication
+import com.yourcompany.recipecomposeapp.app.di.RecipeDetailsViewModelFactory
+import com.yourcompany.recipecomposeapp.app.di.RecipesViewModelFactory
 import com.yourcompany.recipecomposeapp.features.categories.ui.CategoriesScreen
 import com.yourcompany.recipecomposeapp.features.core.network.api.RecipesApiService
 import com.yourcompany.recipecomposeapp.features.core.ui.navigation.BottomNavigation
 import com.yourcompany.recipecomposeapp.features.core.ui.navigation.Destination
 import com.yourcompany.recipecomposeapp.features.core.utils.AppDataStoreManager
-import com.yourcompany.recipecomposeapp.features.details.presentation.RecipeDetailsViewModel
 import com.yourcompany.recipecomposeapp.features.details.ui.RecipeDetailsScreen
 import com.yourcompany.recipecomposeapp.features.favorites.ui.FavoriteScreen
-import com.yourcompany.recipecomposeapp.features.recipes.presentation.RecipesViewModel
 import com.yourcompany.recipecomposeapp.features.recipes.ui.RecipesScreen
 import com.yourcompany.recipecomposeapp.theme.RecipeComposeAppTheme
 import kotlinx.coroutines.delay
@@ -43,8 +42,6 @@ fun RecipesApp(
         val context = LocalContext.current
         val navController = rememberNavController()
         val appData = remember { AppDataStoreManager(context) }
-        val database = remember { RecipesDatabase.getDatabase(context) }
-        val repositoryImpl = remember { RecipesRepositoryImpl(apiService, database) }
 
         AppNavHost(navController = navController, deepLinkIntent = intent)
 
@@ -71,7 +68,6 @@ fun RecipesApp(
                                         )
                                     )
                                 },
-                                repository = repositoryImpl
                             )
                         }
                     }
@@ -102,15 +98,17 @@ fun RecipesApp(
                             navArgument("categoryTitle") { type = NavType.StringType },
                             navArgument("categoryImageUrl") { type = NavType.StringType })
                     ) { backStackEntry ->
-                        val savedStateHandle = SavedStateHandle(
-                            mapOf(
-                                "categoryId" to backStackEntry.arguments?.getInt("categoryId"),
-                                "categoryTitle" to backStackEntry.arguments?.getString("categoryTitle"),
-                                "categoryImageUrl" to backStackEntry.arguments?.getString("categoryImageUrl"),
-                            )
-                        )
+                        val categoryId = backStackEntry.arguments?.getInt("categoryId") ?: 0
+                        val appContainer =
+                            (LocalContext.current.applicationContext as RecipeApplication).appContainer
+
+                        val savedStateHandle : SavedStateHandle = SavedStateHandle().apply {
+                            backStackEntry.arguments?.let { bundle ->
+                                bundle.keySet().forEach { key -> set(key, bundle.get(key)) }
+                            }
+                        }
                         val viewModel = remember(backStackEntry) {
-                            RecipesViewModel(savedStateHandle, repositoryImpl)
+                            RecipesViewModelFactory(savedStateHandle, appContainer.recipesRepository).create()
                         }
 
                         Box(
@@ -136,19 +134,24 @@ fun RecipesApp(
                         route = Destination.Ingredients.route,
                         arguments = listOf(navArgument("recipeId") { type = NavType.IntType })
                     ) { backStackEntry ->
-                        val savedStateHandle = SavedStateHandle(
-                            mapOf("recipeId" to backStackEntry.arguments?.getInt("recipeId"))
-                        )
-                        val viewModel: RecipeDetailsViewModel? = remember(backStackEntry) {
-                            (context.applicationContext as? Application)?.let {
-                                RecipeDetailsViewModel(
-                                    application = it,
-                                    savedStateHandle = savedStateHandle,
-                                    repository = repositoryImpl,
-                                )
+                        val recipeApplication = LocalContext.current.applicationContext as RecipeApplication
+                        val application = recipeApplication as Application
+
+                        val savedStateHandle = SavedStateHandle().apply {
+                            backStackEntry.arguments?.let { bundle ->
+                                bundle.keySet().forEach { key -> set(key, bundle.get(key)) }
                             }
                         }
-                        viewModel?.let { RecipeDetailsScreen(viewModel = it) }
+
+                        val viewModel = remember(backStackEntry) {
+                            RecipeDetailsViewModelFactory(
+                                application = application,
+                                savedStateHandle = savedStateHandle,
+                                repository = recipeApplication.appContainer.recipesRepository
+                            ).create()
+                        }
+
+                        RecipeDetailsScreen(viewModel = viewModel)
                     }
                 }
             },
