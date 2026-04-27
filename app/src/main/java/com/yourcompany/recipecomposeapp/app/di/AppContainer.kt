@@ -24,10 +24,9 @@ class AppContainer(context: Context) {
         .readTimeout(30, TimeUnit.SECONDS)
         .writeTimeout(30, TimeUnit.SECONDS).addInterceptor(loggingInterceptor)
         .build()
-    val contentType = "application/json".toMediaType()
-    val json = Json { ignoreUnknownKeys = true; coerceInputValues = true }
-
-    val retrofit = Retrofit.Builder()
+    private val contentType = "application/json".toMediaType()
+    private val json = Json { ignoreUnknownKeys = true; coerceInputValues = true }
+    private val retrofit = Retrofit.Builder()
         .baseUrl(NetworkConfig.BASE_URL)
         .addConverterFactory(json.asConverterFactory(contentType))
         .client(okHttpClient)

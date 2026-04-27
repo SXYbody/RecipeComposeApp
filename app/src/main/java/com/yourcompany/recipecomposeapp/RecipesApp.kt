@@ -9,6 +9,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.Saver
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -27,8 +28,10 @@ import com.yourcompany.recipecomposeapp.features.core.network.api.RecipesApiServ
 import com.yourcompany.recipecomposeapp.features.core.ui.navigation.BottomNavigation
 import com.yourcompany.recipecomposeapp.features.core.ui.navigation.Destination
 import com.yourcompany.recipecomposeapp.features.core.utils.AppDataStoreManager
+import com.yourcompany.recipecomposeapp.features.details.presentation.RecipeDetailsViewModel
 import com.yourcompany.recipecomposeapp.features.details.ui.RecipeDetailsScreen
 import com.yourcompany.recipecomposeapp.features.favorites.ui.FavoriteScreen
+import com.yourcompany.recipecomposeapp.features.recipes.presentation.RecipesViewModel
 import com.yourcompany.recipecomposeapp.features.recipes.ui.RecipesScreen
 import com.yourcompany.recipecomposeapp.theme.RecipeComposeAppTheme
 import kotlinx.coroutines.delay
@@ -102,13 +105,16 @@ fun RecipesApp(
                         val appContainer =
                             (LocalContext.current.applicationContext as RecipeApplication).appContainer
 
-                        val savedStateHandle : SavedStateHandle = SavedStateHandle().apply {
-                            backStackEntry.arguments?.let { bundle ->
-                                bundle.keySet().forEach { key -> set(key, bundle.get(key)) }
+                        val viewModel: RecipesViewModel = remember(backStackEntry) {
+                            val savedStateHandle = SavedStateHandle().apply {
+                                backStackEntry.arguments?.let { bundle ->
+                                    bundle.keySet().forEach { key -> set(key, bundle.get(key)) }
+                                }
                             }
-                        }
-                        val viewModel = remember(backStackEntry) {
-                            RecipesViewModelFactory(savedStateHandle, appContainer.recipesRepository).create()
+                            RecipesViewModelFactory(
+                                savedStateHandle,
+                                appContainer.recipesRepository
+                            ).create()
                         }
 
                         Box(
@@ -134,16 +140,17 @@ fun RecipesApp(
                         route = Destination.Ingredients.route,
                         arguments = listOf(navArgument("recipeId") { type = NavType.IntType })
                     ) { backStackEntry ->
-                        val recipeApplication = LocalContext.current.applicationContext as RecipeApplication
+                        val recipeApplication =
+                            LocalContext.current.applicationContext as RecipeApplication
                         val application = recipeApplication as Application
 
-                        val savedStateHandle = SavedStateHandle().apply {
-                            backStackEntry.arguments?.let { bundle ->
-                                bundle.keySet().forEach { key -> set(key, bundle.get(key)) }
+                        val viewModel: RecipeDetailsViewModel = remember(backStackEntry) {
+                            val savedStateHandle = SavedStateHandle().apply {
+                                backStackEntry.arguments?.let { bundle ->
+                                    bundle.keySet().forEach { key -> set(key, bundle.get(key)) }
+                                }
                             }
-                        }
 
-                        val viewModel = remember(backStackEntry) {
                             RecipeDetailsViewModelFactory(
                                 application = application,
                                 savedStateHandle = savedStateHandle,
