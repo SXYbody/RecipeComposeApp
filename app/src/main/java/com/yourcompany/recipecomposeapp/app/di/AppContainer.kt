@@ -32,8 +32,8 @@ class AppContainer(context: Context) {
         .client(okHttpClient)
         .build()
 
-    val recipesApi = retrofit.create(RecipesApiService::class.java)
-    val recipesDatabase = RecipesDatabase.getDatabase(context)
+    private val recipesApi = retrofit.create(RecipesApiService::class.java)
+    private val recipesDatabase = RecipesDatabase.getDatabase(context)
     val recipesRepository = RecipesRepositoryImpl(recipesApi, recipesDatabase)
 
 }
