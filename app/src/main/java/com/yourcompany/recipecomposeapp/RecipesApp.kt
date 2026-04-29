@@ -13,18 +13,14 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.yourcompany.recipecomposeapp.app.di.RecipeApplication
-import com.yourcompany.recipecomposeapp.app.di.RecipeDetailsViewModelFactory
-import com.yourcompany.recipecomposeapp.app.di.RecipesViewModelFactory
 import com.yourcompany.recipecomposeapp.features.categories.ui.CategoriesScreen
-import com.yourcompany.recipecomposeapp.features.core.network.api.RecipesApiService
 import com.yourcompany.recipecomposeapp.features.core.ui.navigation.BottomNavigation
 import com.yourcompany.recipecomposeapp.features.core.ui.navigation.Destination
 import com.yourcompany.recipecomposeapp.features.core.utils.AppDataStoreManager
@@ -35,11 +31,9 @@ import com.yourcompany.recipecomposeapp.features.recipes.presentation.RecipesVie
 import com.yourcompany.recipecomposeapp.features.recipes.ui.RecipesScreen
 import com.yourcompany.recipecomposeapp.theme.RecipeComposeAppTheme
 import kotlinx.coroutines.delay
-
 @Composable
 fun RecipesApp(
     intent: Intent? = null,
-    apiService: RecipesApiService,
 ) {
     RecipeComposeAppTheme() {
         val context = LocalContext.current
@@ -101,21 +95,7 @@ fun RecipesApp(
                             navArgument("categoryTitle") { type = NavType.StringType },
                             navArgument("categoryImageUrl") { type = NavType.StringType })
                     ) { backStackEntry ->
-                        val categoryId = backStackEntry.arguments?.getInt("categoryId") ?: 0
-                        val appContainer =
-                            (LocalContext.current.applicationContext as RecipeApplication).appContainer
-
-                        val viewModel: RecipesViewModel = remember(backStackEntry) {
-                            val savedStateHandle = SavedStateHandle().apply {
-                                backStackEntry.arguments?.let { bundle ->
-                                    bundle.keySet().forEach { key -> set(key, bundle.get(key)) }
-                                }
-                            }
-                            RecipesViewModelFactory(
-                                savedStateHandle,
-                                appContainer.recipesRepository
-                            ).create()
-                        }
+                        val viewModel: RecipesViewModel = viewModel()
 
                         Box(
                             modifier = Modifier
@@ -140,23 +120,7 @@ fun RecipesApp(
                         route = Destination.Ingredients.route,
                         arguments = listOf(navArgument("recipeId") { type = NavType.IntType })
                     ) { backStackEntry ->
-                        val recipeApplication =
-                            LocalContext.current.applicationContext as RecipeApplication
-                        val application = recipeApplication as Application
-
-                        val viewModel: RecipeDetailsViewModel = remember(backStackEntry) {
-                            val savedStateHandle = SavedStateHandle().apply {
-                                backStackEntry.arguments?.let { bundle ->
-                                    bundle.keySet().forEach { key -> set(key, bundle.get(key)) }
-                                }
-                            }
-
-                            RecipeDetailsViewModelFactory(
-                                application = application,
-                                savedStateHandle = savedStateHandle,
-                                repository = recipeApplication.appContainer.recipesRepository
-                            ).create()
-                        }
+                        val viewModel: RecipeDetailsViewModel = viewModel()
 
                         RecipeDetailsScreen(viewModel = viewModel)
                     }

@@ -19,6 +19,7 @@ import com.yourcompany.recipecomposeapp.data.model.CategoryDto
 import com.yourcompany.recipecomposeapp.features.core.network.NetworkConfig
 import com.yourcompany.recipecomposeapp.features.core.network.api.RecipesApiService
 import com.yourcompany.recipecomposeapp.theme.RecipeComposeAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -26,15 +27,11 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private var deepLinkIntent by mutableStateOf<Intent?>(null)
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
-        level = if (BuildConfig.DEBUG) {
-            HttpLoggingInterceptor.Level.BODY
-        } else {
-            HttpLoggingInterceptor.Level.NONE
-        }
+        level = HttpLoggingInterceptor.Level.BODY
     }
     private val okHttpClient = OkHttpClient().newBuilder()
         .connectTimeout(15, TimeUnit.SECONDS)
@@ -71,7 +68,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             RecipesApp(
                 intent = deepLinkIntent,
-                apiService = apiService,
             )
         }
     }
