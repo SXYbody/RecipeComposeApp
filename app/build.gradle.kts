@@ -1,12 +1,13 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.ksp)
     id("kotlin-parcelize")
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.0.21"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.3.10"
     alias(libs.plugins.kotlin.android)
+
     alias(libs.plugins.hilt.android)
-    id("kotlin-kapt")
+
+    id("com.google.devtools.ksp") version "2.3.6"
 }
 
 android {
@@ -40,23 +41,22 @@ android {
         compose = true
         buildConfig = true
     }
-    kotlinOptions {
-        jvmTarget = "11"
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 }
 
-kapt {
-    useBuildCache = false
-    arguments {
-        arg("dagger.fastInit", "enabled")
-        arg("dagger.experimentalDaggerErrorMessages", "enabled")
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
     }
 }
 
 dependencies {
-    implementation("com.google.dagger:hilt-android:2.48.1")
-    kapt("com.google.dagger:hilt-compiler:2.48.1")
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation("com.google.dagger:hilt-android:2.51.1")
+    ksp("com.google.dagger:hilt-compiler:2.51.1")
 
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
