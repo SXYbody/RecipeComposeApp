@@ -12,7 +12,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.yourcompany.recipecomposeapp.app.di.CategoriesViewModelFactory
+import com.yourcompany.recipecomposeapp.app.di.RecipeApplication
 import com.yourcompany.recipecomposeapp.data.repository.RecipesRepository
 import com.yourcompany.recipecomposeapp.features.categories.presentation.CategoriesViewModel
 import com.yourcompany.recipecomposeapp.features.core.ui.components.ErrorScreen
@@ -23,9 +26,10 @@ import com.yourcompany.recipecomposeapp.features.core.ui.components.ScreenHeader
 fun CategoriesScreen(
     modifier: Modifier = Modifier,
     onClickCategory: (Int, String, String) -> Unit,
-    repository: RecipesRepository
 ) {
-    val viewModel = remember { CategoriesViewModel(recipeRepository = repository) }
+    val appContainer = (LocalContext.current.applicationContext as RecipeApplication).appContainer
+
+    val viewModel = remember { CategoriesViewModelFactory(appContainer.recipesRepository).create() }
     val uiState by viewModel.uiState.collectAsState()
 
     when {

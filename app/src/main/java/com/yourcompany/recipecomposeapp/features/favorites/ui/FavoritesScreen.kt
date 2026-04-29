@@ -1,5 +1,6 @@
 package com.yourcompany.recipecomposeapp.features.favorites.ui
 
+import android.app.Application
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,8 +13,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -22,6 +25,8 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.yourcompany.recipecomposeapp.app.di.FavoritesViewModelFactory
+import com.yourcompany.recipecomposeapp.app.di.RecipeApplication
 import com.yourcompany.recipecomposeapp.features.core.ui.components.ErrorScreen
 import com.yourcompany.recipecomposeapp.features.core.ui.components.LoadingScreen
 import com.yourcompany.recipecomposeapp.features.core.ui.components.ScreenHeader
@@ -34,16 +39,13 @@ fun FavoriteScreen(
     modifier: Modifier = Modifier,
     onClickRecipe: (Int) -> Unit,
 ) {
-    val viewModel: FavoritesViewModel = viewModel(
-        factory = viewModelFactory {
-            initializer {
-                val application = checkNotNull(this[APPLICATION_KEY])
-                FavoritesViewModel(
-                    application = application,
-                )
-            }
-        }
-    )
+    val appContainer = (LocalContext.current.applicationContext as RecipeApplication).appContainer
+    val application = LocalContext.current.applicationContext as Application
+
+    val viewModel = remember {
+        FavoritesViewModelFactory(application, appContainer.recipesRepository).create()
+    }
+
     val uiState by viewModel.uiState.collectAsState()
 
     val recipes: List<RecipeUiModel> = uiState.recipes
