@@ -13,8 +13,9 @@ retrofit = "2.11.0"
 retrofit-kotlinx-serialization = "1.0.0"
 kotlinx-serialization-json = "1.6.3"
 room = "2.6.1"
-ksp = "2.0.21-1.0.28"
+ksp = "2.0.21-1.0.26"
 coreKtxVersion = "1.18.0"
+hilt = "2.48.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -48,3 +49,4 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }

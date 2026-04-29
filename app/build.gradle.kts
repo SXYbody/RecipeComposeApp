@@ -5,6 +5,8 @@ plugins {
     id("kotlin-parcelize")
     id("org.jetbrains.kotlin.plugin.serialization") version "2.0.21"
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.hilt.android)
+    id("kotlin-kapt")
 }
 
 android {
@@ -43,7 +45,19 @@ android {
     }
 }
 
+kapt {
+    useBuildCache = false
+    arguments {
+        arg("dagger.fastInit", "enabled")
+        arg("dagger.experimentalDaggerErrorMessages", "enabled")
+    }
+}
+
 dependencies {
+    implementation("com.google.dagger:hilt-android:2.48.1")
+    kapt("com.google.dagger:hilt-compiler:2.48.1")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     implementation(libs.core.ktx)
