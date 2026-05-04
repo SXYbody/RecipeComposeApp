@@ -23,17 +23,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FavoritesViewModel @Inject constructor(
-    application: Application,
+    private val dataStoreManager: AppDataStoreManager,
     private val repository: RecipesRepository,
 ) : ViewModel() {
-
-    private val favoriteDataStoreManager = AppDataStoreManager(application.applicationContext)
     private val _uiState = MutableStateFlow(FavoritesUiState())
     val uiState = _uiState.asStateFlow()
 
     init {
         _uiState.update { currentState -> currentState.copy(isLoading = true) }
-        favoriteDataStoreManager.getFavoriteIdsFlow()
+        dataStoreManager.getFavoriteIdsFlow()
             .onEach { ids ->
                 val recipes = coroutineScope {
                     ids.map { id ->

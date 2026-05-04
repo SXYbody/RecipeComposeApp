@@ -7,6 +7,7 @@ import com.yourcompany.recipecomposeapp.data.repository.RecipesRepository
 import com.yourcompany.recipecomposeapp.data.repository.RecipesRepositoryImpl
 import com.yourcompany.recipecomposeapp.features.core.network.NetworkConfig
 import com.yourcompany.recipecomposeapp.features.core.network.api.RecipesApiService
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -70,16 +71,11 @@ object AppModule {
     ): RecipesDatabase {
         return RecipesDatabase.getDatabase(context)
     }
+}
 
-    @Provides
-    @Singleton
-    fun provideRecipesRepository(
-        recipesApiService: RecipesApiService,
-        database: RecipesDatabase
-    ): RecipesRepository {
-        return RecipesRepositoryImpl(
-            recipesApiService = recipesApiService,
-            database = database
-        )
-    }
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class RepositoryModule {
+    @Binds
+    abstract fun bindRecipesRepository(impl: RecipesRepositoryImpl): RecipesRepository
 }

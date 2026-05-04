@@ -13,6 +13,7 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -95,7 +96,7 @@ fun RecipesApp(
                             navArgument("categoryTitle") { type = NavType.StringType },
                             navArgument("categoryImageUrl") { type = NavType.StringType })
                     ) { backStackEntry ->
-                        val viewModel: RecipesViewModel = viewModel()
+                        val viewModel: RecipesViewModel = hiltViewModel()
 
                         Box(
                             modifier = Modifier
@@ -120,7 +121,7 @@ fun RecipesApp(
                         route = Destination.Ingredients.route,
                         arguments = listOf(navArgument("recipeId") { type = NavType.IntType })
                     ) { backStackEntry ->
-                        val viewModel: RecipeDetailsViewModel = viewModel()
+                        val viewModel: RecipeDetailsViewModel = hiltViewModel()
 
                         RecipeDetailsScreen(viewModel = viewModel)
                     }

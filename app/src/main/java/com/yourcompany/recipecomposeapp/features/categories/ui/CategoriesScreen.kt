@@ -12,6 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yourcompany.recipecomposeapp.features.categories.presentation.CategoriesViewModel
 import com.yourcompany.recipecomposeapp.features.core.ui.components.ErrorScreen
@@ -23,7 +24,7 @@ fun CategoriesScreen(
     modifier: Modifier = Modifier,
     onClickCategory: (Int, String, String) -> Unit,
 ) {
-    val viewModel: CategoriesViewModel = viewModel()
+    val viewModel: CategoriesViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
 
     when {

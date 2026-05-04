@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yourcompany.recipecomposeapp.features.core.ui.components.ErrorScreen
 import com.yourcompany.recipecomposeapp.features.core.ui.components.LoadingScreen
@@ -31,7 +32,7 @@ fun FavoriteScreen(
     modifier: Modifier = Modifier,
     onClickRecipe: (Int) -> Unit,
 ) {
-    val viewModel: FavoritesViewModel = viewModel()
+    val viewModel: FavoritesViewModel = hiltViewModel()
 
     val uiState by viewModel.uiState.collectAsState()
 

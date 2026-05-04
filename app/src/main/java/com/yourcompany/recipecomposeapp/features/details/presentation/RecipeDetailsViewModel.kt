@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecipeDetailsViewModel @Inject constructor(
-    application: Application,
+    private val dataStoreManager: AppDataStoreManager,
     savedStateHandle: SavedStateHandle,
     private val repository: RecipesRepository,
 ) : ViewModel() {
@@ -31,8 +31,6 @@ class RecipeDetailsViewModel @Inject constructor(
     //    private val recipe: RecipeUiModel = checkNotNull(
 //        RecipesRepositoryStub.getRecipeById(recipeId)?.toUiModel()
 //    )
-    private val favoriteDataStoreManager = AppDataStoreManager(application.applicationContext)
-
     private val _uiState = MutableStateFlow(RecipeDetailsUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -44,7 +42,7 @@ class RecipeDetailsViewModel @Inject constructor(
                     val recipe: RecipeUiModel = recipeDto.toUiModel()
                     _uiState.update { it.copy(recipe = recipe) }
 
-                    favoriteDataStoreManager.isFavoriteFlow(recipe.id).onEach { isFavorite ->
+                    dataStoreManager.isFavoriteFlow(recipe.id).onEach { isFavorite ->
                         _uiState.update {
                             it.copy(
                                 isFavoriteSave = isFavorite,
@@ -74,11 +72,11 @@ class RecipeDetailsViewModel @Inject constructor(
     fun toggleFavorite() {
         viewModelScope.launch {
             _uiState.value.recipe?.id?.let {
-                if (favoriteDataStoreManager.isFavorite(it)) {
-                    favoriteDataStoreManager.removeFavorite(
+                if (dataStoreManager.isFavorite(it)) {
+                    dataStoreManager.removeFavorite(
                         it
                     )
-                } else favoriteDataStoreManager.addFavorite(it)
+                } else dataStoreManager.addFavorite(it)
             }
         }
     }
