@@ -12,37 +12,35 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
-class RecipesRepositoryImpl(
+class RecipesRepositoryImpl @Inject constructor(
     private val recipesApiService: RecipesApiService,
     private val database: RecipesDatabase,
 ) : RecipesRepository {
-    private val categoryDao = database.categoryDao()
-    private val recipeDao = database.recipeDao()
-
     override fun getCategories(): Flow<List<CategoryDto>> {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val fresh = recipesApiService.getCategories()
-                categoryDao.insertOrUpdateCategory(fresh.map { it.toEntity() })
+                database.categoryDao().insertOrUpdateCategory(fresh.map { it.toEntity() })
             } catch (e: Exception) {
                 Log.e("RecipesRepository", "Ошибка загрузки категории", e)
             }
         }
-        return categoryDao.getAllCategories().map { entities -> entities.map { it.toDto() } }
+        return database.categoryDao().getAllCategories().map { entities -> entities.map { it.toDto() } }
     }
 
     override fun getRecipesByCategory(categoryId: Int): Flow<List<RecipeDto>> {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val fresh = recipesApiService.getRecipesByCategory(categoryId)
-                recipeDao.insertOrUpdateRecipe(fresh.map { it.toEntity(categoryId) })
+                database.recipeDao().insertOrUpdateRecipe(fresh.map { it.toEntity(categoryId) })
             } catch (e: Exception) {
                 Log.e("RecipesRepository", "Ошибка загрузки рецептов", e)
             }
         }
-        return recipeDao.getRecipesByCategoryId(categoryId).map { entities -> entities.map { it.toDto() } }
+        return database.recipeDao().getRecipesByCategoryId(categoryId).map { entities -> entities.map { it.toDto() } }
     }
 
     override fun getRecipe(recipeId: Int): Flow<RecipeDto?> {
@@ -53,6 +51,6 @@ class RecipesRepositoryImpl(
                 Log.e("RecipesRepository", "Ошибка загрузки рецепта", e)
             }
         }
-        return recipeDao.getRecipeById(recipeId).map { it?.toDto() }
+        return database.recipeDao().getRecipeById(recipeId).map { it?.toDto() }
     }
 }

@@ -3,12 +3,14 @@ package com.yourcompany.recipecomposeapp.features.details.presentation
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yourcompany.recipecomposeapp.data.repository.RecipesRepository
 import com.yourcompany.recipecomposeapp.features.core.utils.AppDataStoreManager
 import com.yourcompany.recipecomposeapp.features.details.presentation.model.RecipeDetailsUiState
 import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.toUiModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -16,19 +18,19 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class RecipeDetailsViewModel(
-    application: Application,
+@HiltViewModel
+class RecipeDetailsViewModel @Inject constructor(
+    private val dataStoreManager: AppDataStoreManager,
     savedStateHandle: SavedStateHandle,
     private val repository: RecipesRepository,
-) : AndroidViewModel(application = application) {
+) : ViewModel() {
     private val recipeId: Int = checkNotNull(savedStateHandle["recipeId"])
 
     //    private val recipe: RecipeUiModel = checkNotNull(
 //        RecipesRepositoryStub.getRecipeById(recipeId)?.toUiModel()
 //    )
-    private val favoriteDataStoreManager = AppDataStoreManager(application.applicationContext)
-
     private val _uiState = MutableStateFlow(RecipeDetailsUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -40,7 +42,7 @@ class RecipeDetailsViewModel(
                     val recipe: RecipeUiModel = recipeDto.toUiModel()
                     _uiState.update { it.copy(recipe = recipe) }
 
-                    favoriteDataStoreManager.isFavoriteFlow(recipe.id).onEach { isFavorite ->
+                    dataStoreManager.isFavoriteFlow(recipe.id).onEach { isFavorite ->
                         _uiState.update {
                             it.copy(
                                 isFavoriteSave = isFavorite,
@@ -70,11 +72,11 @@ class RecipeDetailsViewModel(
     fun toggleFavorite() {
         viewModelScope.launch {
             _uiState.value.recipe?.id?.let {
-                if (favoriteDataStoreManager.isFavorite(it)) {
-                    favoriteDataStoreManager.removeFavorite(
+                if (dataStoreManager.isFavorite(it)) {
+                    dataStoreManager.removeFavorite(
                         it
                     )
-                } else favoriteDataStoreManager.addFavorite(it)
+                } else dataStoreManager.addFavorite(it)
             }
         }
     }

@@ -5,13 +5,16 @@ import androidx.lifecycle.viewModelScope
 import com.yourcompany.recipecomposeapp.data.repository.RecipesRepository
 import com.yourcompany.recipecomposeapp.features.categories.presentation.model.CategoriesUiState
 import com.yourcompany.recipecomposeapp.features.categories.presentation.model.toUiModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CategoriesViewModel(
+@HiltViewModel
+class CategoriesViewModel @Inject constructor(
     private val recipeRepository: RecipesRepository
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<CategoriesUiState> =

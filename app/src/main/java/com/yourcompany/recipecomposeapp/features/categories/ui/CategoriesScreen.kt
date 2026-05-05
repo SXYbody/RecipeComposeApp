@@ -10,13 +10,10 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.yourcompany.recipecomposeapp.app.di.CategoriesViewModelFactory
-import com.yourcompany.recipecomposeapp.app.di.RecipeApplication
-import com.yourcompany.recipecomposeapp.data.repository.RecipesRepository
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yourcompany.recipecomposeapp.features.categories.presentation.CategoriesViewModel
 import com.yourcompany.recipecomposeapp.features.core.ui.components.ErrorScreen
 import com.yourcompany.recipecomposeapp.features.core.ui.components.LoadingScreen
@@ -27,9 +24,7 @@ fun CategoriesScreen(
     modifier: Modifier = Modifier,
     onClickCategory: (Int, String, String) -> Unit,
 ) {
-    val appContainer = (LocalContext.current.applicationContext as RecipeApplication).appContainer
-
-    val viewModel = remember { CategoriesViewModelFactory(appContainer.recipesRepository).create() }
+    val viewModel: CategoriesViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
 
     when {

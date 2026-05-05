@@ -2,12 +2,13 @@ package com.yourcompany.recipecomposeapp.features.favorites.presentation
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yourcompany.recipecomposeapp.data.repository.RecipesRepository
-import com.yourcompany.recipecomposeapp.data.repository.RecipesRepositoryStub
 import com.yourcompany.recipecomposeapp.features.core.utils.AppDataStoreManager
 import com.yourcompany.recipecomposeapp.features.favorites.presentation.model.FavoritesUiState
 import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.toUiModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -18,19 +19,19 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
-class FavoritesViewModel(
-    application: Application,
+@HiltViewModel
+class FavoritesViewModel @Inject constructor(
+    private val dataStoreManager: AppDataStoreManager,
     private val repository: RecipesRepository,
-) : AndroidViewModel(application = application) {
-
-    private val favoriteDataStoreManager = AppDataStoreManager(application.applicationContext)
+) : ViewModel() {
     private val _uiState = MutableStateFlow(FavoritesUiState())
     val uiState = _uiState.asStateFlow()
 
     init {
         _uiState.update { currentState -> currentState.copy(isLoading = true) }
-        favoriteDataStoreManager.getFavoriteIdsFlow()
+        dataStoreManager.getFavoriteIdsFlow()
             .onEach { ids ->
                 val recipes = coroutineScope {
                     ids.map { id ->
