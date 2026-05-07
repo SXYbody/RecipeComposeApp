@@ -6,7 +6,7 @@ import org.junit.Test
 
 class CategoryDtoTest {
     @Test
-    fun `converts_DTO_to_UI_model`() {
+    fun `converts DTO to UI model`() {
         val dto = CategoryDto(
             id = 1,
             title = "Завтраки",
