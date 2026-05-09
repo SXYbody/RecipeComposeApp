@@ -1,5 +1,6 @@
 package com.yourcompany.recipecomposeapp.data.repository
 
+import app.cash.turbine.test
 import com.yourcompany.recipecomposeapp.data.database.RecipesDatabase
 import com.yourcompany.recipecomposeapp.data.database.dao.CategoryDao
 import com.yourcompany.recipecomposeapp.data.database.dao.RecipeDao
@@ -16,6 +17,7 @@ import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
+import okio.IOException
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -53,8 +55,10 @@ class RecipesRepositoryImplTest {
         coEvery { categoryDao.insertOrUpdateCategory(any()) } returns listOf(1L, 2L)
 
         val result = mutableListOf<List<CategoryDto>>()
-        repository.getCategories().collect { categories ->
-            result.add(categories)
+        repository.getCategories().test {
+            val item = awaitItem()
+            result.add(item)
+            cancelAndIgnoreRemainingEvents()
         }
 
         assertEquals(1, result.size)
@@ -69,11 +73,12 @@ class RecipesRepositoryImplTest {
                 .toEntity()
         )
         every { categoryDao.getAllCategories() } returns flowOf(cachedCategories)
-        coEvery { apiService.getCategories() } throws Exception("Network error")
+        coEvery { apiService.getCategories() } throws IOException("Network error")
 
         val result = mutableListOf<List<CategoryDto>>()
-        repository.getCategories().collect { categories ->
-            result.add(categories)
+        repository.getCategories().test {
+            val item = awaitItem()
+            result.add(item)
         }
 
         assertEquals(1, result.size)
@@ -93,8 +98,10 @@ class RecipesRepositoryImplTest {
         coEvery { recipeDao.insertOrUpdateRecipe(any()) } returns listOf(1L, 2L)
 
         val result = mutableListOf<List<RecipeDto>>()
-        repository.getRecipesByCategory(categoryId).collect { recipes ->
-            result.add(recipes)
+        repository.getRecipesByCategory(categoryId).test {
+            val item = awaitItem()
+            result.add(item)
+            cancelAndIgnoreRemainingEvents()
         }
         assertEquals(1, result.size)
         assertEquals(2, result[0].size)
