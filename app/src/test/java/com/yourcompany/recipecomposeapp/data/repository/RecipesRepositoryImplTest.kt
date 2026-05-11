@@ -79,6 +79,7 @@ class RecipesRepositoryImplTest {
         repository.getCategories().test {
             val item = awaitItem()
             result.add(item)
+            cancelAndIgnoreRemainingEvents()
         }
 
         assertEquals(1, result.size)
