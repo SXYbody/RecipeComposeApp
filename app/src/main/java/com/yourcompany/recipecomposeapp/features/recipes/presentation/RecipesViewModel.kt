@@ -39,13 +39,22 @@ class RecipesViewModel @Inject constructor(
     fun loadRecipes(categoryId: Int) {
         viewModelScope.launch {
             _uiState.update { currentState -> currentState.copy(isLoading = true) }
-            repository.getRecipesByCategory(categoryId).collect { dto ->
-                val recipesList = dto.map { it.toUiModel() }
+            try {
+                repository.getRecipesByCategory(categoryId).collect { dto ->
+                    val recipesList = dto.map { it.toUiModel() }
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            categoryTitle = categoryTitle,
+                            categoryImageUrl = categoryImageUrl,
+                            recipesList = recipesList,
+                            isLoading = false,
+                        )
+                    }
+                }
+            } catch (e: Exception) {
                 _uiState.update { currentState ->
                     currentState.copy(
-                        categoryTitle = categoryTitle,
-                        categoryImageUrl = categoryImageUrl,
-                        recipesList = recipesList,
+                        error = e.message ?: "Unknown error",
                         isLoading = false,
                     )
                 }
