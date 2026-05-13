@@ -59,6 +59,7 @@ class CategoriesViewModelTest {
             assertTrue(state.categories.isEmpty())
             assertNull(state.error)
             assertFalse(state.isLoading)
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
