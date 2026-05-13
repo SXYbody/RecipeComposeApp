@@ -24,15 +24,23 @@ class CategoriesViewModel @Inject constructor(
     init {
         loadCategories()
     }
-
     fun loadCategories() {
         viewModelScope.launch {
             _uiState.update { currentState -> currentState.copy(isLoading = true) }
-            recipeRepository.getCategories().collect {
-                val categoriesList = it.map { recipe -> recipe.toUiModel() }
+            try {
+                recipeRepository.getCategories().collect {
+                    val categoriesList = it.map { recipe -> recipe.toUiModel() }
+                    _uiState.update { uiState ->
+                        uiState.copy(
+                            categories = categoriesList,
+                            isLoading = false
+                        )
+                    }
+                }
+            } catch (e: Exception) {
                 _uiState.update { uiState ->
                     uiState.copy(
-                        categories = categoriesList,
+                        error = e.message ?: "Unknown error",
                         isLoading = false
                     )
                 }
