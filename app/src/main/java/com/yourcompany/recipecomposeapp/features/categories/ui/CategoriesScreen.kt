@@ -11,10 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yourcompany.recipecomposeapp.features.categories.presentation.CategoriesViewModel
+import com.yourcompany.recipecomposeapp.features.categories.presentation.model.CategoriesUiState
 import com.yourcompany.recipecomposeapp.features.core.ui.components.ErrorScreen
 import com.yourcompany.recipecomposeapp.features.core.ui.components.LoadingScreen
 import com.yourcompany.recipecomposeapp.features.core.ui.components.ScreenHeader
@@ -61,6 +63,52 @@ fun CategoriesScreen(
                             imageContentDescription = "Картинка категории",
                             title = category.title,
                             description = category.description
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun CategoriesContent(
+    uiState: CategoriesUiState,
+    onClickCategory: (Int, String, String) -> Unit,
+) {
+    when {
+        uiState.isLoading -> LoadingScreen()
+
+        uiState.error != null -> ErrorScreen("Категории не удалось загрузить")
+
+        else -> {
+            Column(
+                verticalArrangement = Arrangement.Top,
+            ) {
+                ScreenHeader(
+                    image = "file:///android_asset/categories.png",
+                    imageContentDescription = "Заголовок категорий",
+                    text = "КАТЕГОРИИ",
+                )
+
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    items(
+                        items = uiState.categories,
+                        key = { it.id }) { category ->
+                        CategoryItem(
+                            onClick = {
+                                onClickCategory(category.id, category.title, category.imageUrl)
+                            },
+                            image = category.imageUrl,
+                            imageContentDescription = "Картинка категории",
+                            title = category.title,
+                            description = category.description,
                         )
                     }
                 }

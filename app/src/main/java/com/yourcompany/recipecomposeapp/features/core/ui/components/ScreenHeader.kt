@@ -37,6 +37,7 @@ import com.yourcompany.recipecomposeapp.R
 fun ScreenHeader(
     image: String,
     imageContentDescription: String,
+    modifier: Modifier = Modifier,
     text: String,
     showShareButton: Boolean = false,
     onShareClick: () -> Unit = {},
