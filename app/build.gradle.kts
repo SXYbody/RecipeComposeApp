@@ -52,6 +52,13 @@ android {
         }
     }
 
+    packaging {
+        excludes += listOf(
+            "META-INF/LICENSE.md",
+            "META-INF/LICENSE-notice.md"
+        )
+    }
+
 }
 
 kotlin {
@@ -61,6 +68,14 @@ kotlin {
 }
 
 dependencies {
+    androidTestImplementation(libs.mockwebserver)
+    androidTestImplementation(libs.mockk.android)
+    androidTestImplementation(libs.room.testing)
+    androidTestImplementation(libs.hilt.android.testing)
+    androidTestImplementation(libs.coroutines.test)
+    androidTestImplementation(libs.turbine)
+    kspAndroidTest(libs.hilt.compiler)
+
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
     testImplementation(libs.coroutines.test)
