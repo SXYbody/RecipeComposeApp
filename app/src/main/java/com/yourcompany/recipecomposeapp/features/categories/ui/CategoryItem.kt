@@ -23,6 +23,7 @@ import com.yourcompany.recipecomposeapp.features.core.ui.TitleImage
 fun CategoryItem(
     onClick: () -> Unit,
     image: String,
+    modifier: Modifier = Modifier,
     imageContentDescription: String,
     title: String,
     description: String,
@@ -67,16 +68,4 @@ fun CategoryItem(
             )
         }
     }
-}
-
-@Preview
-@Composable
-fun CategoryItemPreview() {
-    CategoryItem(
-        {},
-        "",
-        "",
-        "Всем привет!",
-        "Это Бильбо..."
-    )
 }

@@ -14,6 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -23,6 +24,7 @@ import com.yourcompany.recipecomposeapp.features.core.ui.components.LoadingScree
 import com.yourcompany.recipecomposeapp.features.core.ui.components.ScreenHeader
 import com.yourcompany.recipecomposeapp.features.recipes.presentation.RecipesViewModel
 import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
+import com.yourcompany.recipecomposeapp.features.recipes.presentation.model.RecipesUiState
 
 @Composable
 fun RecipesScreen(
@@ -40,7 +42,9 @@ fun RecipesScreen(
 
         recipes.isEmpty() -> {
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .testTag("empty_state"),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
@@ -68,6 +72,69 @@ fun RecipesScreen(
 
                 LazyColumn(
                     modifier = modifier
+                        .fillMaxSize()
+                        .weight(1f),
+                    contentPadding = PaddingValues(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    items(recipes, key = { it.id }) { recipe ->
+                        RecipeItem(
+                            recipe = recipe,
+                            onRecipeClick = {
+                                onRecipeClick(recipe.id)
+                            },
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun RecipeContent(
+    uiState: RecipesUiState,
+    onRecipeClick: (Int) -> Unit,
+) {
+    val recipes: List<RecipeUiModel> = uiState.recipesList
+
+    when {
+        uiState.isLoading -> LoadingScreen()
+
+        uiState.error != null -> ErrorScreen("Рецепты не удалось загрузить")
+
+        recipes.isEmpty() -> {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .testTag("empty_state"),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    text = "Рецептов в этой категории нету",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontSize = 25.sp,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+
+        else -> {
+            Column(
+                verticalArrangement = Arrangement.Top,
+                modifier = Modifier.fillMaxSize()
+            ) {
+
+                ScreenHeader(
+                    image = uiState.categoryImageUrl,
+                    imageContentDescription = "Рецепты категории",
+                    text = uiState.categoryTitle
+                )
+
+                LazyColumn(
+                    modifier = Modifier
                         .fillMaxSize()
                         .weight(1f),
                     contentPadding = PaddingValues(8.dp),
