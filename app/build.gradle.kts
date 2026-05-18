@@ -68,6 +68,11 @@ kotlin {
 }
 
 dependencies {
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.rules)
+    androidTestImplementation(libs.kaspresso)
+    androidTestImplementation(libs.kaspresso.compose)
+
     androidTestImplementation(libs.mockwebserver)
     androidTestImplementation(libs.mockk.android)
     androidTestImplementation(libs.room.testing)

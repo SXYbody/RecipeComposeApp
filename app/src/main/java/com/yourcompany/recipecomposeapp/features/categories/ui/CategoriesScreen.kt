@@ -37,7 +37,7 @@ fun CategoriesScreen(
         else -> {
             Column(
                 verticalArrangement = Arrangement.Top,
-                modifier = modifier
+                modifier = Modifier.testTag("categories_screen")
             ) {
                 ScreenHeader(
                     image = "file:///android_asset/categories.png",
