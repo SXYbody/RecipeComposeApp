@@ -47,7 +47,7 @@ fun CategoriesScreen(
 
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
-                    modifier = modifier.fillMaxSize(),
+                    modifier = modifier.fillMaxSize().testTag("categories_grid"),
                     contentPadding = PaddingValues(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
