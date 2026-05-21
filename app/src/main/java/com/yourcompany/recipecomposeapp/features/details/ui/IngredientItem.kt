@@ -27,13 +27,17 @@ fun IngredientItem(
     unitOfMeasure: String,
     modifier: Modifier = Modifier
 ) {
-    val quantityDouble = quantity.toDouble()
-    val measureText = when {
-        quantityDouble >= 1 -> quantity
-        quantityDouble >= 0.75 -> "3/4"
-        quantityDouble >= 0.5 -> "1/2"
-        quantityDouble >= 0.25 -> "1/4"
-        else -> "щепотка"
+    val measureText = try {
+        val quantityDouble = quantity.toDouble()
+        when {
+            quantityDouble >= 1 -> quantity
+            quantityDouble >= 0.75 -> "3/4"
+            quantityDouble >= 0.5 -> "1/2"
+            quantityDouble >= 0.25 -> "1/4"
+            else -> "щепотка"
+        }
+    } catch (e: NumberFormatException) {
+        quantity
     }
 
     Row(
