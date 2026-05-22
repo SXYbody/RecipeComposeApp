@@ -61,7 +61,7 @@ fun RecipesScreen(
         else -> {
             Column(
                 verticalArrangement = Arrangement.Top,
-                modifier = modifier.fillMaxSize()
+                modifier = modifier.fillMaxSize().testTag("recipes_screen")
             ) {
 
                 ScreenHeader(
